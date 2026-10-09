@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Plugin Celulares · Admin do atacado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel:#F4F4F6; --card:#FFFFFF; --tinta:#16181D; --tinta-2:#5E6470; --linha:#E3E5EA;
+    --azul:#1B3FE0; --zap:#17A34A; --zap-hover:#128A3D; --erro:#C8332F; --ok-bg:#E6F6EC; --erro-bg:#FCEBEA; --foto-bg:#F0F1F4;
+    --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+    --texto:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --papel:#0E1015; --card:#171A21; --tinta:#EEF0F4; --tinta-2:#9AA0AD; --linha:#262A33;
+           --azul:#8AA2FF; --ok-bg:#12281B; --erro-bg:#321816; --foto-bg:#1F232C; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);line-height:1.4}
+  :focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+  main{max-width:720px;margin:0 auto;padding:16px 16px 80px;display:grid;gap:16px}
+  h1{font-family:var(--display);font-weight:800;font-size:1.7rem;letter-spacing:-.02em;margin:8px 0 0}
+  h2{font-family:var(--display);font-weight:700;font-size:1.2rem;margin:0 0 12px}
+  .sub{margin:0;color:var(--tinta-2);font-size:.9rem}
+  section,details.painel{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:16px}
+  details.painel>summary{font-family:var(--display);font-weight:700;font-size:1.1rem;cursor:pointer}
+  details.painel[open]>summary{margin-bottom:12px}
+
+  label{display:block;font-weight:600;font-size:.88rem;margin:12px 0 4px}
+  .dica{font-weight:400;color:var(--tinta-2)}
+  input[type=text],input[type=password],input[type=search],select{width:100%;padding:12px 14px;border:1px solid var(--linha);border-radius:10px;background:var(--papel);color:var(--tinta);font:inherit;font-size:16px}
+  .duas{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .check{display:flex;gap:8px;align-items:center;font-weight:600;margin-top:14px}
+  .check input{width:20px;height:20px}
+
+  button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 16px;cursor:pointer}
+  button:disabled{opacity:.55;cursor:default}
+  .sec{background:var(--foto-bg);color:var(--tinta);border:1px solid var(--linha)}
+  .pri{background:var(--azul);color:#fff}
+  .envia{background:var(--zap);color:#fff}
+  .envia:hover:not(:disabled){background:var(--zap-hover)}
+  .acoes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .linha-btn{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .mini{padding:8px 12px;font-size:.85rem}
+
+  .miniaturas{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .mini-foto{position:relative;width:72px;height:72px;border-radius:10px;background:var(--foto-bg);border:1px solid var(--linha);display:grid;place-items:center;overflow:hidden;font-size:.65rem;text-align:center;padding:4px;word-break:break-all}
+  .mini-foto img{width:100%;height:100%;object-fit:cover}
+  .mini-foto button{position:absolute;top:2px;right:2px;width:22px;height:22px;padding:0;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;font-size:.8rem;line-height:1}
+
+  .auto-foto{display:flex;gap:12px;align-items:center;margin-top:10px;padding:10px;border:1px dashed var(--linha);border-radius:12px;background:var(--papel)}
+  .auto-foto img{width:64px;height:64px;object-fit:contain;border-radius:8px;background:var(--foto-bg);flex:none}
+  .auto-foto p{margin:0;font-size:.82rem;color:var(--tinta-2)}
+  .auto-foto .vazia{width:64px;height:64px;border-radius:8px;background:var(--foto-bg);display:grid;place-items:center;font-size:.65rem;text-align:center;color:var(--tinta-2);flex:none}
+  .fcor{border:1px solid var(--linha);border-radius:12px;padding:10px;margin-top:10px;background:var(--papel)}
+  .fcor-nome{display:flex;align-items:center;gap:8px;font-weight:700}
+  .fcor-nome .bolinha{width:16px;height:16px;border-radius:50%;border:1px solid rgba(128,128,128,.55);flex:none}
+  .fcor .auto-foto{background:var(--card);margin-top:8px}
+  .fcor .auto-foto[hidden]{display:none}
+  .fcor input[type=file]{margin-top:8px;max-width:100%}
+  .auto-foto.falta{border-color:var(--erro)}
+  .auto-foto.falta p{color:var(--erro)}
+  .item{border:1px solid var(--linha);border-radius:12px;padding:12px;display:grid;gap:6px;margin-top:10px}
+  .item.off{opacity:.6}
+  .lote-linha{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;padding:10px;border:1px solid var(--linha);border-radius:12px;margin-top:8px;background:var(--papel)}
+  .lote-linha input{background:var(--card);margin-top:0}
+  .lote-linha .l-cor{grid-column:1/3}
+  .lote-linha .l-x{grid-column:3;grid-row:1;width:44px;padding:0;font-size:1.3rem;line-height:1}
+  .lote-linha .l-bat{grid-column:1}.lote-linha .l-qtd{grid-column:2}
+  .lote-linha.sem-bat .l-qtd{grid-column:1/3}
+  .lote-linha .l-obs{grid-column:1/-1}
+  .item.grupo{gap:8px}
+  .var-admin{border-top:1px solid var(--linha);padding-top:8px;display:grid;gap:4px}
+  .var-admin.off{opacity:.55}
+  .var-admin .linha-btn{margin-top:4px}
+  .item b{font-family:var(--display);font-size:1.05rem}
+  .item small{color:var(--tinta-2)}
+  .preco{font-weight:800}
+  .vazio{color:var(--tinta-2);margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .chip{border:2px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:999px;padding:9px 16px;font-weight:600}
+  .chip[aria-pressed=true]{border-color:var(--azul);background:var(--foto-bg);color:var(--azul)}
+  .chip[aria-pressed=true]::after{content:" ✓"}
+
+  #status{position:sticky;bottom:12px;z-index:5;border-radius:12px;padding:12px 14px;font-weight:600;border:1px solid var(--linha);background:var(--card);display:none}
+  #status.ok{display:block;background:var(--ok-bg);border-color:var(--zap)}
+  #status.erro{display:block;background:var(--erro-bg);border-color:var(--erro)}
+  #status.info{display:block}
+  pre{background:var(--papel);border:1px solid var(--linha);border-radius:10px;padding:12px;overflow:auto;font-size:.8rem;max-height:320px}
+  .url{display:flex;gap:8px}
+  .url input{flex:1}
+
+  .cores{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .cor{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 10px;border:2px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:999px;font-size:.9rem;font-weight:600}
+  .cor .bolinha{width:20px;height:20px;border-radius:50%;border:1px solid rgba(128,128,128,.55);flex:none;display:grid;place-items:center;font-size:.7rem;line-height:1;color:#fff}
+  .cor[aria-pressed=true]{border-color:var(--azul);background:var(--foto-bg)}
+  .cor[aria-pressed=true]::after{content:"✓";font-weight:800;color:var(--azul)}
+  .cor-outra{display:flex;gap:8px;margin-top:10px}
+  .cor-outra input{flex:1}
+
+  /* seletor Apple / Android */
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+  .seg button{display:flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--linha);padding:11px 12px}
+  .seg button[aria-pressed=true]{border-color:var(--azul);background:var(--card);color:var(--azul)}
+
+  /* gaveta de cores */
+  details.gaveta{margin-top:14px;border:1px solid var(--linha);border-radius:12px;background:var(--papel)}
+  details.gaveta>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;font-weight:600;font-size:.88rem}
+  details.gaveta>summary::-webkit-details-marker{display:none}
+  details.gaveta>summary::after{content:"▾";color:var(--tinta-2);transition:transform .15s}
+  details.gaveta[open]>summary::after{transform:rotate(180deg)}
+  .gaveta .corpo{padding:0 14px 14px}
+  .gaveta .resumo{margin-left:auto;display:flex;align-items:center;gap:6px;min-width:0;font-weight:500;color:var(--tinta-2)}
+  .gaveta .resumo .bolinha{width:16px;height:16px;border-radius:50%;border:1px solid rgba(128,128,128,.55);flex:none}
+  .gaveta .resumo .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <h1>Atualizar atacado</h1>
+    <p class="sub">Plugin Celulares · atacado · preencha os aparelhos, confira a lista e envie para o GitHub.</p>
+  </div>
+
+  <!-- 1. GitHub -->
+  <details class="painel" id="painelGit">
+    <summary>Conexão com o GitHub</summary>
+    <label for="gOwner">Usuário ou organização</label>
+    <input type="text" id="gOwner" autocomplete="off" autocapitalize="off" value="plugincelularesnovaserrana-sys" placeholder="minha-loja">
+    <label for="gRepo">Repositório</label>
+    <input type="text" id="gRepo" autocomplete="off" autocapitalize="off" value="Atacado" placeholder="atacado">
+    <div class="duas">
+      <div>
+        <label for="gBranch">Branch</label>
+        <input type="text" id="gBranch" autocomplete="off" autocapitalize="off" value="main">
+      </div>
+      <div>
+        <label for="gPath">Arquivo da lista</label>
+        <input type="text" id="gPath" autocomplete="off" autocapitalize="off" value="produtos.json">
+      </div>
+    </div>
+    <label for="gPasta">Pasta das fotos</label>
+    <input type="text" id="gPasta" autocomplete="off" autocapitalize="off" value="assets">
+    <label for="gToken">Token do GitHub <span class="dica">(permissão Contents: leitura e escrita, só neste repositório)</span></label>
+    <input type="password" id="gToken" autocomplete="off" placeholder="github_pat_...">
+    <label class="check"><input type="checkbox" id="gLembrar"> Lembrar token neste aparelho</label>
+
+    <label for="gUrl">Endereço da lista (já configurado em <code>listaUrl</code> do index.html)</label>
+    <div class="url">
+      <input type="text" id="gUrl" readonly>
+      <button type="button" class="sec mini" id="copiarUrl">Copiar</button>
+    </div>
+
+    <div class="linha-btn">
+      <button type="button" class="pri" id="salvarCfg">Salvar e carregar lista</button>
+    </div>
+  </details>
+
+  <!-- 2. Formulário -->
+  <section aria-labelledby="tFormulario">
+    <h2 id="tFormulario">Novo aparelho</h2>
+
+    <label id="lPlat">Tipo de aparelho</label>
+    <div class="seg" role="group" aria-labelledby="lPlat">
+      <button type="button" class="sec" id="plApple" aria-pressed="true">Apple · iPhone</button>
+      <button type="button" class="sec" id="plAndroid" aria-pressed="false">Android</button>
+    </div>
+
+    <div id="boxMarca" hidden>
+      <label for="fMarca">Marca</label>
+      <input type="text" id="fMarca" list="marcasAndroid" autocomplete="off" placeholder="Samsung">
+      <datalist id="marcasAndroid"></datalist>
+    </div>
+
+    <label for="fModelo">Modelo</label>
+    <input type="text" id="fModelo" list="modelosIphone" autocomplete="off" placeholder="iPhone 13 Pro Max">
+    <datalist id="modelosIphone"></datalist>
+
+    <label id="lArm">Armazenamento <span class="dica">(toque para marcar)</span></label>
+    <div class="chips" id="chipsArm" role="group" aria-labelledby="lArm"></div>
+    <div id="boxRam" hidden>
+      <label id="lRam">Memória RAM <span class="dica">(opcional)</span></label>
+      <div class="chips" id="chipsRam" role="group" aria-labelledby="lRam"></div>
+    </div>
+    <input type="hidden" id="fDetalhes">
+
+    <label for="fCond">Condição</label>
+    <select id="fCond">
+      <option value="Seminovo">Seminovo</option>
+      <option value="Novo">Novo</option>
+    </select>
+
+    <label for="fPreco">Preço no atacado (R$)</label>
+    <input type="text" id="fPreco" inputmode="decimal" autocomplete="off" placeholder="2890,00">
+
+    <input type="hidden" id="fCores">
+    <label id="lLote">Variações <span class="dica" id="dicaLote">(cada linha = cor + bateria + quantidade)</span></label>
+    <div id="lote" role="group" aria-labelledby="lLote"></div>
+    <datalist id="coresLista"></datalist>
+    <button type="button" class="sec mini" id="btnLinha" style="margin-top:10px">+ Adicionar linha</button>
+
+    <label id="lFotos">Fotos <span class="dica">(uma por cor: vincule o arquivo de cada cor)</span></label>
+    <div id="fotosCores" role="group" aria-labelledby="lFotos"></div>
+
+    <label class="check"><input type="checkbox" id="fDisp" checked> Disponível na loja</label>
+
+    <details style="margin-top:12px">
+      <summary class="dica" style="cursor:pointer">Opções avançadas</summary>
+      <label for="fParcelado">Total no parcelado (R$) <span class="dica">(opcional, para mostrar o valor da parcela)</span></label>
+      <input type="text" id="fParcelado" inputmode="decimal" autocomplete="off" placeholder="3400,00">
+    </details>
+
+    <div class="acoes">
+      <button type="button" class="sec" id="btnAdicionar">Adicionar ao estoque</button>
+      <button type="button" class="envia" id="btnEnviar">Atualizar lista</button>
+    </div>
+    <p class="sub" style="margin-top:10px">Adicionar guarda todas as linhas de uma vez (linhas iguais somam no estoque) e abre os campos para o próximo modelo. Atualizar lista envia tudo para o GitHub.</p>
+  </section>
+
+  <!-- 3. Lista -->
+  <section aria-labelledby="tLista">
+    <h2 id="tLista">Lista atual (<span id="qtd">0</span>)</h2>
+    <div id="lista"></div>
+    <details style="margin-top:14px">
+      <summary class="dica" style="cursor:pointer">Ver JSON</summary>
+      <pre id="previa"></pre>
+    </details>
+  </section>
+
+  <div id="status" role="status" aria-live="polite"></div>
+</main>
+
+<script>
+/* ============ ESTADO ============ */
+const $ = id => document.getElementById(id);
+const S = { itens: [], carregada: false, editando: -1, fc: {}, semFoto: {}, ocupado: false, plat: "Apple", lote: [{cor: "", bateria: "", qtd: "1", obs: ""}] };
+const LS = "atacado-admin";
+const PADRAO = {owner: "plugincelularesnovaserrana-sys", repo: "Atacado"};
+
+/* ============ UTILITÁRIOS ============ */
+const brl = n => Number(n).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+function paraNumero(v){
+  let s = String(v ?? "").replace(/[^\d,.-]/g, "");
+  if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".");
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+const listaDe = v => String(v ?? "").split(",").map(x => x.trim()).filter(Boolean);
+const enc = p => p.split("/").map(encodeURIComponent).join("/");
+const limpaPasta = p => p.trim().replace(/^\/+|\/+$/g, "");
+const semAcento = t => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const arquivoDoModelo = (m, cor) => semAcento((m + (cor ? " " + cor : "")).toLowerCase()).replace(/\s+/g, " ").trim() + ".png";
+const MODELOS = [];
+[12,13,14,15,16,17].forEach(n => ["", " Pro", " Pro Max"].forEach(x => MODELOS.push("iPhone " + n + x)));
+["", " Pro", " Pro Max"].slice(1).forEach(x => MODELOS.push("iPhone 18" + x));
+
+const MARCAS_ANDROID = ["Samsung","Motorola","Xiaomi","Redmi","Poco","Realme","Asus","Infinix","Google Pixel","LG","OnePlus","Honor","Nokia"];
+const platDe = p => p.plataforma || (/^iphone/i.test(p.modelo || "") ? "Apple" : "Android");
+
+function aviso(tipo, texto){
+  const s = $("status"); s.className = tipo; s.textContent = texto;
+  if (tipo === "ok") clearTimeout(aviso.t), aviso.t = setTimeout(() => { if (s.className === "ok") s.className = ""; }, 7000);
+}
+function ocupar(b){
+  S.ocupado = b;
+  ["btnAdicionar","btnEnviar","salvarCfg"].forEach(id => $(id).disabled = b);
+}
+
+/* ============ CONFIGURAÇÃO ============ */
+function lerCfg(){
+  return {
+    owner: $("gOwner").value.trim(), repo: $("gRepo").value.trim(),
+    branch: $("gBranch").value.trim() || "main",
+    path: limpaPasta($("gPath").value) || "produtos.json",
+    pasta: limpaPasta($("gPasta").value),
+    token: $("gToken").value.trim(), lembrar: $("gLembrar").checked
+  };
+}
+function guardarCfg(){
+  const c = lerCfg();
+  try {
+    const copia = {...c}; if (!c.lembrar) copia.token = "";
+    localStorage.setItem(LS, JSON.stringify(copia));
+  } catch (e) {}
+}
+function restaurarCfg(){
+  try {
+    const c = JSON.parse(localStorage.getItem(LS) || "null"); if (!c) return false;
+    $("gOwner").value = c.owner || PADRAO.owner; $("gRepo").value = c.repo || PADRAO.repo;
+    $("gBranch").value = c.branch || "main"; $("gPath").value = c.path || "produtos.json";
+    $("gPasta").value = c.pasta ?? "assets"; $("gToken").value = c.token || "";
+    $("gLembrar").checked = !!c.lembrar;
+    return true;
+  } catch (e) { return false; }
+}
+function atualizarUrl(){
+  const c = lerCfg();
+  $("gUrl").value = (c.owner && c.repo) ? `https://raw.githubusercontent.com/${c.owner}/${c.repo}/${c.branch}/${c.path}` : "";
+}
+function cfgCompleta(){
+  const c = lerCfg();
+  if (!c.owner || !c.repo || !c.token){
+    $("painelGit").open = true;
+    aviso("erro", "Preencha usuário, repositório e token na conexão com o GitHub.");
+    return null;
+  }
+  return c;
+}
+
+/* ============ GITHUB ============ */
+async function gh(c, metodo, caminho, corpo){
+  const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${enc(caminho)}` + (metodo === "GET" ? `?ref=${encodeURIComponent(c.branch)}` : "");
+  const r = await fetch(url, {
+    method: metodo,
+    headers: {
+      "Authorization": "Bearer " + c.token,
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      ...(corpo ? {"Content-Type": "application/json"} : {})
+    },
+    body: corpo ? JSON.stringify(corpo) : undefined,
+    cache: "no-store"
+  });
+  let dados = null; try { dados = await r.json(); } catch (e) {}
+  if (!r.ok){
+    const e = new Error(dados?.message || ("Erro " + r.status)); e.status = r.status; throw e;
+  }
+  return dados;
+}
+function traduz(e){
+  if (e.status === 401) return "Token inválido ou expirado.";
+  if (e.status === 403) return "O token não tem permissão de escrita neste repositório (Contents: Read and write).";
+  if (e.status === 404) return "Repositório ou branch não encontrado. Confira usuário, repositório e branch.";
+  if (e.status === 409 || e.status === 422) return "A lista mudou no GitHub enquanto você editava. Toque em \"Salvar e carregar lista\" e tente de novo.";
+  return e.message || "Falha na conexão.";
+}
+const utf8ParaB64 = txt => { const b = new TextEncoder().encode(txt); let s = ""; b.forEach(x => s += String.fromCharCode(x)); return btoa(s); };
+const b64ParaUtf8 = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, "")), ch => ch.charCodeAt(0)));
+
+async function carregarLista(){
+  const c = cfgCompleta(); if (!c) return;
+  ocupar(true); aviso("info", "Carregando a lista do GitHub...");
+  try {
+    let itens = [];
+    try {
+      const d = await gh(c, "GET", c.path);
+      const j = JSON.parse(b64ParaUtf8(d.content || ""));
+      itens = (Array.isArray(j) ? j : (j.produtos || j.items || [])).map(p => ({...p, novas: []}));
+    } catch (e) {
+      if (e.status !== 404) throw e;
+    }
+    let maxId = itens.reduce((m, p) => Math.max(m, parseInt(p.id, 10) || 0), 0);
+    itens.forEach(p => { if (!p.id) p.id = ++maxId; });          /* código curto para cada registro */
+    S.itens = itens; S.carregada = true; S.editando = -1;
+    limparForm(); desenharLista();
+    aviso("ok", itens.length ? `Lista carregada: ${itens.length} aparelho(s).` : "Nenhuma lista encontrada ainda. Ela será criada no primeiro envio.");
+  } catch (e) {
+    S.carregada = false;
+    aviso("erro", traduz(e));
+  } finally { ocupar(false); }
+}
+
+/* ============ FOTOS ============ */
+function slug(t){
+  return (t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")) || "aparelho";
+}
+async function fotoParaBase64(file){
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((ok, falha) => {
+      const i = new Image(); i.onload = () => ok(i);
+      i.onerror = () => falha(new Error("Não consegui ler a foto " + file.name));
+      i.src = url;
+    });
+    const k = Math.min(1, 1200 / Math.max(img.naturalWidth, img.naturalHeight));
+    const cv = document.createElement("canvas");
+    cv.width = Math.round(img.naturalWidth * k); cv.height = Math.round(img.naturalHeight * k);
+    const ctx = cv.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.drawImage(img, 0, 0, cv.width, cv.height);
+    const blob = await new Promise(r => cv.toBlob(r, "image/jpeg", 0.85));
+    return await new Promise((ok, falha) => {
+      const fr = new FileReader(); fr.onload = () => ok(String(fr.result).split(",")[1]);
+      fr.onerror = () => falha(new Error("Falha ao preparar a foto.")); fr.readAsDataURL(blob);
+    });
+  } finally { URL.revokeObjectURL(url); }
+}
+
+let tokenFoto = 0;
+const testaImagem = url => new Promise(ok => { const i = new Image(); i.onload = () => ok(true); i.onerror = () => ok(false); i.src = url; });
+function agendaFotoAuto(){ clearTimeout(agendaFotoAuto.t); agendaFotoAuto.t = setTimeout(atualizarFotoAuto, 350); }
+
+/* Uma linha por cor do lote: procura a foto no repositório (modelo + cor) e deixa vincular o arquivo daquela cor. */
+const corKey = c => String(c || "").trim().toLowerCase();
+function fotoDe(cor){ const k = corKey(cor); return S.fc[k] || (S.fc[k] = {nomes: [], novas: []}); }
+function coresDoForm(){
+  const m = new Map();
+  S.lote.forEach(l => { const c = l.cor.trim(); if (c && !m.has(corKey(c))) m.set(corKey(c), c); });
+  return m.size ? [...m.values()] : [""];
+}
+
+async function atualizarFotoAuto(){
+  const box = $("fotosCores"), modelo = $("fModelo").value.trim(), meu = ++tokenFoto;
+  const c = lerCfg(), cores = coresDoForm();
+  box.replaceChildren(); S.semFoto = {};
+  const base = (c.owner && c.repo) ? `https://raw.githubusercontent.com/${c.owner}/${c.repo}/${c.branch}/` + (c.pasta ? enc(c.pasta) + "/" : "") : "";
+
+  const linhas = cores.map(cor => {
+    const f = fotoDe(cor), tem = f.nomes.length + f.novas.length > 0;
+    const blk = document.createElement("div"); blk.className = "fcor";
+    const nm = document.createElement("div"); nm.className = "fcor-nome";
+    if (cor){
+      const d = document.createElement("span"); d.className = "bolinha";
+      d.style.background = (PALETA.find(p => mesmaCor(p[0], cor)) || [])[1] || "var(--foto-bg)"; nm.append(d);
+    }
+    const t = document.createElement("span"); t.textContent = cor || "Sem cor definida"; nm.append(t);
+
+    const row = document.createElement("div"); row.className = "auto-foto"; row.hidden = tem;
+    const ph = document.createElement("div"); ph.className = "vazia"; ph.textContent = "...";
+    const p = document.createElement("p"); row.append(ph, p);
+
+    const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.multiple = true;
+    inp.setAttribute("aria-label", "Foto da cor " + (cor || "do aparelho"));
+    inp.onchange = () => { f.novas.push(...inp.files); atualizarFotoAuto(); };
+
+    const th = document.createElement("div"); th.className = "miniaturas";
+    f.nomes.forEach((nome, i) => {
+      const d = document.createElement("div"); d.className = "mini-foto"; d.textContent = nome;
+      const x = document.createElement("button"); x.type = "button"; x.textContent = "×"; x.setAttribute("aria-label", "Remover foto " + nome);
+      x.onclick = () => { f.nomes.splice(i, 1); atualizarFotoAuto(); };
+      d.append(x); th.append(d);
+    });
+    f.novas.forEach((file, i) => {
+      const d = document.createElement("div"); d.className = "mini-foto";
+      const img = document.createElement("img"); img.alt = file.name; img.src = URL.createObjectURL(file);
+      img.onload = () => URL.revokeObjectURL(img.src);
+      const x = document.createElement("button"); x.type = "button"; x.textContent = "×"; x.setAttribute("aria-label", "Remover foto " + file.name);
+      x.onclick = () => { f.novas.splice(i, 1); atualizarFotoAuto(); };
+      d.append(img, x); th.append(d);
+    });
+    blk.append(nm, row, inp, th); box.append(blk);
+    if (!tem) p.textContent = modelo ? "Procurando no banco..." : "Preencha o modelo para procurar a foto no banco.";
+    return {cor, f, tem, row, ph, p};
+  });
+
+  if (!modelo) return;
+  if (!base){
+    linhas.forEach(l => { if (!l.tem) l.p.textContent = "Conecte ao GitHub para procurar a foto no banco."; });
+    return;
+  }
+  for (const l of linhas){
+    if (l.tem) continue;
+    const arq = arquivoDoModelo(modelo, l.cor);
+    const cand = [arq, arq.replace(/\.png$/, ".jpg"), arq.replace(/\.png$/, ".jpeg"), arq.replace(/\.png$/, ".webp")];
+    let achou = null;
+    for (const nome of cand){
+      const url = base + encodeURIComponent(nome) + "?t=" + Date.now();
+      if (await testaImagem(url)){ achou = url; break; }
+      if (meu !== tokenFoto) return;
+    }
+    if (meu !== tokenFoto) return;
+    if (achou){
+      const img = document.createElement("img"); img.alt = ""; img.src = achou;
+      l.ph.replaceWith(img);
+      l.p.textContent = `Foto encontrada no banco (${arq}).`;
+    } else {
+      l.row.classList.add("falta"); l.ph.textContent = "sem imagem";
+      l.p.textContent = `⚠ Não há foto de ${modelo}${l.cor ? " " + l.cor : ""} no banco (${arq}). Escolha o arquivo abaixo para vincular a esta cor.`;
+      S.semFoto[corKey(l.cor)] = l.cor || modelo;
+    }
+  }
+}
+
+function desenharMiniaturas(){ atualizarFotoAuto(); }
+
+/* ============ CORES E LOTE ============ */
+const PALETA = [
+  ["Preto","#111111"],["Branco","#FFFFFF"],["Cinza","#8A8F98"],["Prata","#C9CCD1"],
+  ["Dourado","#D4AF37"],["Vermelho","#E02424"],["Rosa","#F472B6"],["Roxo","#7C3AED"],
+  ["Lilás","#C4A1FF"],["Azul","#2563EB"],["Azul-claro","#7DD3FC"],["Verde","#16A34A"],
+  ["Amarelo","#FACC15"],["Laranja","#F97316"],["Bege","#E8D8B8"],["Marrom","#7A4A2A"]
+];
+const mesmaCor = (a, b) => String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
+const novaLinha = () => ({cor: "", bateria: "", qtd: "1", obs: ""});
+const ehSemi = () => $("fCond").value === "Seminovo";
+const temBat = () => ehSemi() && S.plat === "Apple";           /* bateria: só iPhone seminovo */
+const qtdDe = p => p.qtd !== undefined && p.qtd !== null ? p.qtd : (p.condicao === "Seminovo" ? 1 : null);
+const proximoId = () => S.itens.reduce((m, p) => Math.max(m, parseInt(p.id, 10) || 0), 0) + 1;
+const chaveModelo = p => [p.modelo, p.detalhes || "", p.condicao].map(x => String(x).trim().toLowerCase()).join("|");
+const mesmoModelo = (a, b) => chaveModelo(a) === chaveModelo(b);
+
+$("coresLista").replaceChildren(...PALETA.map(([n]) => { const o = document.createElement("option"); o.value = n; return o; }));
+
+function sincronizarCores(){
+  $("fCores").value = [...new Set(S.lote.map(l => l.cor.trim()).filter(Boolean))].join(", ");
+  agendaFotoAuto();
+}
+
+function campo(rotulo, valor, aoMudar, extra = {}){
+  const i = document.createElement("input");
+  i.type = "text"; i.autocomplete = "off"; i.value = valor;
+  i.placeholder = rotulo; i.setAttribute("aria-label", rotulo);
+  if (extra.modo) i.inputMode = extra.modo;
+  if (extra.max) i.maxLength = extra.max;
+  if (extra.lista) i.setAttribute("list", extra.lista);
+  i.addEventListener("input", () => aoMudar(i.value));
+  return i;
+}
+
+function desenharLote(){
+  const box = $("lote"); box.replaceChildren();
+  const bat = temBat(), semi = ehSemi();
+  S.lote.forEach((l, k) => {
+    const r = document.createElement("div"); r.className = "lote-linha" + (bat ? "" : " sem-bat");
+    const cor = campo("Cor", l.cor, v => { l.cor = v; sincronizarCores(); }, {lista: "coresLista"});
+    cor.classList.add("l-cor"); r.append(cor);
+    if (S.lote.length > 1){
+      const x = document.createElement("button"); x.type = "button"; x.className = "sec l-x";
+      x.textContent = "×"; x.setAttribute("aria-label", "Remover esta linha");
+      x.onclick = () => { S.lote.splice(k, 1); desenharLote(); sincronizarCores(); };
+      r.append(x);
+    }
+    if (bat){
+      const b = campo("Bateria %", l.bateria, v => l.bateria = v, {modo: "numeric", max: 3});
+      b.classList.add("l-bat"); r.append(b);
+    }
+    const q = campo("Qtd", l.qtd, v => l.qtd = v, {modo: "numeric", max: 3});
+    q.classList.add("l-qtd"); r.append(q);
+    if (semi){
+      const o = campo("Observação (opcional)", l.obs, v => l.obs = v, {max: 160});
+      o.classList.add("l-obs"); r.append(o);
+    }
+    box.append(r);
+  });
+  $("dicaLote").textContent = temBat()
+    ? "(cada linha = cor + bateria + quantidade)"
+    : "(cada linha = cor + quantidade)";
+}
+$("btnLinha").onclick = () => {
+  const ult = S.lote[S.lote.length - 1];
+  S.lote.push({...novaLinha(), obs: ""});
+  desenharLote();
+  const cores = document.querySelectorAll(".l-cor"); cores[cores.length - 1].focus();
+};
+const atualizarCamposSemi = desenharLote;
+
+/* ============ ARMAZENAMENTO (botões) ============ */
+const ARMAZENAMENTOS = ["64GB","128GB","256GB","512GB","1TB","2TB"];
+const RAMS = ["4GB","6GB","8GB","12GB","16GB"];
+let armSel = "", ramSel = "";
+function lerDetalhes(){                       /* lê o texto salvo (ex.: "256GB · 8GB RAM") e marca os botões */
+  const t = $("fDetalhes").value;
+  const mr = t.match(/(\d+)\s*GB\s*RAM/i);
+  ramSel = mr ? mr[1] + "GB" : "";
+  const m = t.replace(/(\d+)\s*GB\s*RAM/i, "").match(/(\d+)\s*(GB|TB)/i);
+  armSel = m ? m[1] + m[2].toUpperCase() : "";
+}
+function gravarDetalhes(){
+  $("fDetalhes").value = [armSel, ramSel ? ramSel + " RAM" : ""].filter(Boolean).join(" · ");
+}
+function chips(boxId, opcoes, atual, aoClicar){
+  const box = $(boxId); box.replaceChildren();
+  const todas = atual && !opcoes.includes(atual) ? [...opcoes, atual] : opcoes;   /* valor antigo fora da lista continua marcado */
+  todas.forEach(v => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = v;
+    b.setAttribute("aria-pressed", v === atual ? "true" : "false");
+    b.onclick = () => aoClicar(v === atual ? "" : v);
+    box.append(b);
+  });
+}
+function desenharChips(){
+  chips("chipsArm", ARMAZENAMENTOS, armSel, v => { armSel = v; gravarDetalhes(); desenharChips(); });
+  chips("chipsRam", RAMS, ramSel, v => { ramSel = v; gravarDetalhes(); desenharChips(); });
+}
+function desenharArmazenamento(){ lerDetalhes(); desenharChips(); }
+
+/* ============ APPLE x ANDROID ============ */
+function definirPlat(p){
+  S.plat = p;
+  const apple = p === "Apple";
+  $("plApple").setAttribute("aria-pressed", apple); $("plAndroid").setAttribute("aria-pressed", !apple);
+  $("boxMarca").hidden = apple;
+  $("fModelo").setAttribute("list", apple ? "modelosIphone" : "");
+  $("fModelo").placeholder = apple ? "iPhone 13 Pro Max" : "Galaxy A55";
+  $("boxRam").hidden = apple;                                /* RAM só para Android */
+  if (apple){ ramSel = ""; gravarDetalhes(); }
+  desenharArmazenamento();
+  desenharLote();
+}
+$("plApple").onclick = () => definirPlat("Apple");
+$("plAndroid").onclick = () => { definirPlat("Android"); $("fMarca").focus(); };
+
+/* ============ FORMULÁRIO ============ */
+function limparForm(){
+  ["fModelo","fMarca","fDetalhes","fPreco","fCores","fParcelado"].forEach(id => $(id).value = "");
+  desenharArmazenamento();
+  $("fCond").value = "Seminovo"; $("fDisp").checked = true;
+  S.fc = {}; S.editando = -1; S.lote = [novaLinha()];
+  desenharLote();
+  $("tFormulario").textContent = "Novo aparelho (lote)";
+  $("btnAdicionar").textContent = "Adicionar ao estoque";
+  desenharMiniaturas();
+}
+const formTemConteudo = () => $("fModelo").value.trim() !== "";
+
+function adicionar(){
+  const modelo = $("fModelo").value.trim();
+  const preco = paraNumero($("fPreco").value);
+  if (!modelo){ aviso("erro", "Preencha o modelo."); $("fModelo").focus(); return false; }
+  if (preco <= 0){ aviso("erro", "Preencha o preço no atacado."); $("fPreco").focus(); return false; }
+  const marca = $("fMarca").value.trim();
+  if (S.plat === "Android" && !marca){ aviso("erro", "Preencha a marca do aparelho Android."); $("fMarca").focus(); return false; }
+
+  const semi = ehSemi(), bat = temBat();
+  const juntas = [];
+  for (const [k, l] of S.lote.entries()){
+    const qtd = parseInt(String(l.qtd).replace(/\D/g, ""), 10);
+    if (!(qtd >= 1)){ aviso("erro", `Informe a quantidade na linha ${k + 1}.`); return false; }
+    let bateria;
+    if (bat && String(l.bateria).trim() !== ""){
+      bateria = parseInt(String(l.bateria).replace(/\D/g, ""), 10);
+      if (!(bateria >= 1 && bateria <= 100)){ aviso("erro", `Bateria da linha ${k + 1} deve ser de 1 a 100.`); return false; }
+    }
+    const cor = l.cor.trim(), observacao = semi ? l.obs.trim() : "";
+    const ex = juntas.find(j => mesmaCor(j.cor, cor) && j.bateria === bateria && j.observacao === observacao);
+    if (ex) ex.qtd = Math.min(999, ex.qtd + qtd);                  /* linhas iguais viram uma só */
+    else juntas.push({cor, bateria, observacao, qtd: Math.min(999, qtd)});
+  }
+
+  const coresAntes = coresDoForm().filter(Boolean), semFotoAntes = {...S.semFoto};
+  coresAntes.forEach(c => { const f = S.fc[corKey(c)]; if (f && f.nomes.length + f.novas.length) delete semFotoAntes[corKey(c)]; });
+  const detalhes = $("fDetalhes").value.trim();
+  const base = {plataforma: S.plat, modelo, detalhes, condicao: $("fCond").value, preco, disponivel: $("fDisp").checked};
+  const parc = paraNumero($("fParcelado").value);
+  const levou = new Set();                 /* arquivos novos de uma cor vão só no primeiro registro dela */
+  const fotosDaCor = cor => {
+    const f = S.fc[corKey(cor)] || {nomes: [], novas: []}, k = corKey(cor), primeira = !levou.has(k);
+    levou.add(k);
+    return {nomes: [...f.nomes], novas: primeira ? [...f.novas] : []};
+  };
+  const montar = l => ({...base, cores: l.cor ? [l.cor] : [], bateria: l.bateria,
+                        observacao: l.observacao || undefined, qtd: l.qtd});
+  let msg;
+
+  if (S.editando >= 0){
+    const orig = S.itens[S.editando];
+    const [l0, ...resto] = juntas;
+    const f0 = fotosDaCor(l0.cor);
+    const novo = {...orig, ...montar(l0), fotos: f0.nomes, novas: f0.novas};
+    if (parc > 0) novo.parcelado = parc; else delete novo.parcelado;
+    if (S.plat === "Android") novo.marca = marca; else delete novo.marca;
+    S.itens[S.editando] = novo;
+    resto.forEach((l, j) => {
+      const fr = fotosDaCor(l.cor);
+      const n = {...montar(l), id: proximoId(), fotos: fr.nomes, novas: fr.novas};
+      if (parc > 0) n.parcelado = parc;
+      if (S.plat === "Android") n.marca = marca;
+      S.itens.splice(S.editando + 1 + j, 0, n);
+    });
+    msg = `Alterações salvas em ${modelo}` + (resto.length ? ` (+${resto.length} variação(ões) nova(s))` : "") + ". Toque em Atualizar lista para enviar.";
+  } else {
+    let criadas = 0, somadas = 0;
+    juntas.forEach(l => {
+      const igual = S.itens.find(p => p.qtd !== undefined && p.preco === preco &&
+        mesmoModelo(p, base) && mesmaCor((p.cores || [])[0] || "", l.cor) &&
+        (p.bateria || "") === (l.bateria || "") && (p.observacao || "") === (l.observacao || ""));
+      let rec;
+      if (igual){ igual.qtd = Math.min(9999, igual.qtd + l.qtd); rec = igual; somadas++; }
+      else {
+        rec = {...montar(l), id: proximoId(), fotos: [], novas: []};
+        if (parc > 0) rec.parcelado = parc;
+        if (S.plat === "Android") rec.marca = marca;
+        S.itens.push(rec); criadas++;
+      }
+      const fr = fotosDaCor(l.cor);                      /* cada cor leva as próprias fotos */
+      rec.fotos = [...new Set([...(rec.fotos || []), ...fr.nomes])];
+      rec.novas = [...(rec.novas || []), ...fr.novas];
+    });
+    const partes = [];
+    if (criadas) partes.push(`${criadas} variação(ões) nova(s)`);
+    if (somadas) partes.push(`${somadas} somada(s) ao estoque existente`);
+    msg = `${modelo}: ${partes.join(" e ")}. Preencha o próximo ou toque em Atualizar lista.`;
+  }
+  const sem = coresAntes.filter(c => semFotoAntes[corKey(c)]);
+  if (sem.length) msg += ` Atenção: sem foto no banco para ${sem.join(", ")}.`;
+  aviso("ok", msg);
+  limparForm(); desenharLista();
+  $("fModelo").focus();
+  return true;
+}
+
+function editar(i){
+  const p = S.itens[i];
+  S.editando = i;
+  $("fCond").value = p.condicao === "Novo" || p.condicao === "Lacrado" ? "Novo" : "Seminovo";
+  definirPlat(platDe(p)); $("fMarca").value = p.marca || "";
+  $("fModelo").value = p.modelo || ""; $("fDetalhes").value = p.detalhes || ""; desenharArmazenamento();
+  $("fPreco").value = p.preco != null ? String(p.preco).replace(".", ",") : "";
+  const cores = (p.cores || []).length ? p.cores : [""];
+  const q = p.qtd !== undefined && p.qtd !== null ? String(p.qtd) : (p.condicao === "Seminovo" ? "1" : "");
+  S.lote = cores.map(c => ({cor: c, bateria: p.bateria ? String(p.bateria) : "", qtd: q, obs: p.observacao || ""}));
+  desenharLote(); sincronizarCores();
+  $("fParcelado").value = p.parcelado ? String(p.parcelado).replace(".", ",") : "";
+  $("fDisp").checked = p.disponivel !== false;
+  S.fc = {}; { const f = fotoDe((p.cores || [])[0] || ""); f.nomes = [...(p.fotos || [])]; f.novas = [...(p.novas || [])]; }
+  $("tFormulario").textContent = "Editando aparelho";
+  $("btnAdicionar").textContent = "Salvar alterações";
+  desenharMiniaturas();
+  $("tFormulario").scrollIntoView({behavior: "smooth"});
+}
+
+/* ============ LISTA ============ */
+function ajustarQtd(p, d){
+  let q = qtdDe(p);
+  if (q === null){                                      /* cadastro antigo, sem estoque informado */
+    const r = prompt(`Quantas unidades de ${p.modelo} ${(p.cores || [])[0] || ""} existem em estoque agora?`, "");
+    if (r === null) return;
+    q = parseInt(r, 10); if (!(q >= 0)) return;
+    p.qtd = q;
+  } else p.qtd = Math.max(0, Math.min(9999, q + d));
+  desenharLista();
+}
+
+function botao(txt, fn, rotulo){
+  const b = document.createElement("button"); b.type = "button"; b.className = "sec mini";
+  b.textContent = txt; b.onclick = fn; if (rotulo) b.setAttribute("aria-label", rotulo);
+  return b;
+}
+
+function desenharLista(){
+  const box = $("lista"); box.replaceChildren();
+  const grupos = new Map();
+  S.itens.forEach((p, i) => {
+    const k = chaveModelo(p);
+    if (!grupos.has(k)) grupos.set(k, []);
+    grupos.get(k).push(i);
+  });
+  const unidades = S.itens.reduce((n, p) => n + (qtdDe(p) || 0), 0);
+  $("qtd").textContent = `${grupos.size} ${grupos.size === 1 ? "modelo" : "modelos"} · ${unidades} ${unidades === 1 ? "aparelho" : "aparelhos"}`;
+  if (!S.itens.length){
+    const p = document.createElement("p"); p.className = "vazio"; p.textContent = "Nenhum aparelho ainda."; box.append(p);
+  }
+
+  grupos.forEach(idxs => {
+    const p0 = S.itens[idxs[0]];
+    const g = document.createElement("div"); g.className = "item grupo";
+    const t = document.createElement("b"); t.textContent = p0.modelo + (p0.detalhes ? " · " + p0.detalhes : "");
+    const sub = document.createElement("small");
+    const total = idxs.reduce((n, i) => n + (qtdDe(S.itens[i]) || 0), 0);
+    const precos = [...new Set(idxs.map(i => S.itens[i].preco))];
+    sub.textContent = [platDe(p0) === "Apple" ? "Apple" : (p0.marca || "Android"), p0.condicao,
+      precos.length === 1 ? brl(precos[0]) : "preços diferentes", total + (total === 1 ? " un." : " un.")].join(" · ");
+    const bp = botao("Alterar preço do modelo", () => {
+      const r = prompt(`Novo preço de ${p0.modelo}${p0.detalhes ? " " + p0.detalhes : ""} (vale para todas as variações):`,
+        String(precos[0]).replace(".", ","));
+      if (r === null) return;
+      const v = paraNumero(r);
+      if (!(v > 0)){ aviso("erro", "Preço inválido."); return; }
+      idxs.forEach(i => S.itens[i].preco = v);
+      desenharLista(); aviso("ok", "Preço atualizado. Toque em Atualizar lista para enviar.");
+    });
+    bp.style.justifySelf = "start";
+    g.append(t, sub, bp);
+
+    idxs.forEach(i => {
+      const p = S.itens[i], q = qtdDe(p);
+      const off = p.disponivel === false || q === 0;
+      const v = document.createElement("div"); v.className = "var-admin" + (off ? " off" : "");
+      const info = document.createElement("div"); info.className = "var-info";
+      const nf = (p.fotos || []).length + (p.novas || []).length;
+      const l1 = document.createElement("strong");
+      l1.textContent = [(p.cores || [])[0] || "sem cor", p.bateria ? "bateria " + p.bateria + "%" : "",
+        q === null ? "estoque não informado" : (q === 0 ? "esgotado" : q + (q === 1 ? " un." : " un.")),
+        p.id ? "#" + p.id : ""].filter(Boolean).join(" · ");
+      const l2 = document.createElement("small");
+      l2.textContent = [p.observacao ? "Obs: " + p.observacao : "", precos.length > 1 ? brl(p.preco) : "",
+        (p.novas || []).length ? p.novas.length + " foto(s) para enviar" : (nf ? "" : "foto automática"),
+        p.disponivel === false ? "indisponível" : ""].filter(Boolean).join(" · ");
+      info.append(l1); if (l2.textContent) info.append(l2);
+      const bt = document.createElement("div"); bt.className = "linha-btn";
+      const bm = botao("−1", () => ajustarQtd(p, -1), "Vendeu 1 unidade");
+      const bmais = botao("+1", () => ajustarQtd(p, 1), "Adicionar 1 unidade");
+      const be = botao("Editar", () => editar(i));
+      const bc = botao("Duplicar", () => {
+        editar(i); S.editando = -1; Object.values(S.fc).forEach(f => f.novas = []);
+        $("tFormulario").textContent = "Novo aparelho (cópia)"; $("btnAdicionar").textContent = "Adicionar ao estoque";
+        desenharMiniaturas(); const c1 = $("chipsArm").querySelector("button"); if (c1) c1.focus();
+      });
+      const bd = botao(p.disponivel === false ? "Mostrar" : "Ocultar", () => { p.disponivel = p.disponivel === false; desenharLista(); },
+        p.disponivel === false ? "Marcar como disponível" : "Marcar como indisponível");
+      const br = botao("Remover", () => {
+        if (!confirm(`Remover ${p.modelo} ${(p.cores || [])[0] || ""} da lista?`)) return;
+        S.itens.splice(i, 1);
+        if (S.editando === i) limparForm(); else if (S.editando > i) S.editando--;
+        desenharLista();
+      });
+      bt.append(bm, bmais, be, bc, bd, br);
+      v.append(info, bt); g.append(v);
+    });
+    box.append(g);
+  });
+  $("previa").textContent = JSON.stringify(serializar(), null, 2);
+}
+function serializar(){
+  return {produtos: S.itens.map(({novas, ...resto}) => resto)};
+}
+
+/* ============ ENVIO ============ */
+async function enviar(){
+  const c = cfgCompleta(); if (!c) return;
+  if (formTemConteudo() && !adicionar()) return;
+  if (!S.itens.length){ aviso("erro", "A lista está vazia. Adicione ao menos um aparelho."); return; }
+  if (!S.carregada &&
+      !confirm("A lista atual do GitHub não foi carregada. Enviar agora vai substituir tudo que está lá. Continuar?")) return;
+  if (!confirm(`Enviar ${S.itens.length} registro(s) para o GitHub?`)) return;
+
+  ocupar(true);
+  try {
+    const total = S.itens.reduce((n, p) => n + (p.novas || []).length, 0);
+    let feitas = 0;
+    for (const p of S.itens){
+      const novas = p.novas || [];
+      while (novas.length){
+        const arq = novas[0];
+        aviso("info", `Enviando foto ${++feitas} de ${total}...`);
+        const nome = `${slug(p.modelo)}-${Date.now().toString(36)}-${feitas}.jpg`;
+        const caminho = c.pasta ? `${c.pasta}/${nome}` : nome;
+        await gh(c, "PUT", caminho, {message: `Foto: ${p.modelo}`, content: await fotoParaBase64(arq), branch: c.branch});
+        p.fotos = [...(p.fotos || []), nome];
+        novas.shift();
+      }
+      p.novas = novas;
+      if ((p.fotos || []).length) S.itens.forEach(q => { if (q !== p && mesmoModelo(q, p) && !(q.fotos || []).length) q.fotos = [...p.fotos]; });
+    }
+
+    aviso("info", "Enviando a lista...");
+    let sha;
+    try { sha = (await gh(c, "GET", c.path)).sha; } catch (e) { if (e.status !== 404) throw e; }
+    const corpo = {message: "Atualiza lista de aparelhos", content: utf8ParaB64(JSON.stringify(serializar(), null, 2) + "\n"), branch: c.branch};
+    if (sha) corpo.sha = sha;
+    await gh(c, "PUT", c.path, corpo);
+
+    S.carregada = true; desenharLista();
+    aviso("ok", `Lista enviada com ${S.itens.length} aparelho(s). A vitrine atualiza em alguns minutos.`);
+  } catch (e) {
+    desenharLista();
+    aviso("erro", "Não foi possível enviar: " + traduz(e));
+  } finally { ocupar(false); }
+}
+
+/* ============ EVENTOS ============ */
+$("btnAdicionar").onclick = adicionar;
+$("btnEnviar").onclick = enviar;
+$("salvarCfg").onclick = async () => { guardarCfg(); atualizarUrl(); await carregarLista(); if (S.carregada) $("painelGit").open = false; };
+$("copiarUrl").onclick = async () => {
+  const v = $("gUrl").value; if (!v) return;
+  try { await navigator.clipboard.writeText(v); aviso("ok", "Endereço copiado."); }
+  catch (e) { $("gUrl").select(); aviso("info", "Selecione e copie o endereço."); }
+};
+["gOwner","gRepo","gBranch","gPath"].forEach(id => $(id).addEventListener("input", atualizarUrl));
+["gOwner","gRepo","gBranch","gPasta"].forEach(id => $(id).addEventListener("change", atualizarFotoAuto));
+let tFoto; $("fModelo").addEventListener("input", () => { clearTimeout(tFoto); tFoto = setTimeout(atualizarFotoAuto, 400); });
+$("fModelo").addEventListener("change", atualizarFotoAuto);
+$("fCond").addEventListener("change", desenharLote);
+window.addEventListener("beforeunload", e => {
+  if (S.itens.some(p => (p.novas || []).length)) { e.preventDefault(); e.returnValue = ""; }
+});
+
+/* ============ INÍCIO ============ */
+(function(){
+  $("modelosIphone").replaceChildren(...MODELOS.map(m => { const o = document.createElement("option"); o.value = m; return o; }));
+  $("marcasAndroid").replaceChildren(...MARCAS_ANDROID.map(m => { const o = document.createElement("option"); o.value = m; return o; }));
+  definirPlat("Apple");
+  const tinha = restaurarCfg();
+  atualizarUrl(); desenharLista(); desenharMiniaturas();
+  const c = lerCfg();
+  if (tinha && c.owner && c.repo && c.token) { $("painelGit").open = false; carregarLista(); }
+  else $("painelGit").open = true;
+})();
+</script>
+</body>
+</html>
