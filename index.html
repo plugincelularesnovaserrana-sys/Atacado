@@ -447,7 +447,7 @@ function adicionar(g, v, n){
   } else {
     cart.push({key: v.key, id: v.id, modelo: nomeCompleto(g), detalhes: g.detalhes, condicao: g.condicao,
       bateria: v.bateria, observacao: v.observacao, cor: v.cor, preco: v.preco,
-      qtd: Math.min(max, n), max, foto: g.fotos[0] || ""});
+      qtd: Math.min(max, n), max, foto: g.fotoOk || g.fotos[0] || ""});
   }
   salvarCarrinho(); atualizarCarrinho(); toast("Adicionado ao carrinho");
 }
@@ -463,7 +463,13 @@ function toast(t){
   const e = $("toast"); e.textContent = t; e.classList.add("on");
   clearTimeout(tToast); tToast = setTimeout(() => e.classList.remove("on"), 1800);
 }
-const urlFoto = f => !f ? semFoto : (/^(https?:|data:|\/)/.test(f) ? f : CONFIG.pastaMidias + (f.includes("%") ? f : encodeURI(f)));
+const EXT_FOTO = ["png","jpg","jpeg","webp","PNG","JPG","JPEG"];
+function variacoesFoto(f){
+  const m = /^(.*)\.([a-z0-9]{3,4})$/i.exec(f || "");
+  if (!m || /^(https?:|data:)/.test(f)) return [f];
+  return [f, ...EXT_FOTO.map(e => m[1] + "." + e).filter(n => n !== f)];
+}
+const urlFoto = f => !f ? semFoto : (/^(https?:|data:|file:|\/)/.test(f) ? f : CONFIG.pastaMidias + (f.includes("%") ? f : encodeURI(f)));
 const descItem = it => [it.condicao, it.bateria ? `Bateria ${it.bateria}%` : "", it.cor ? `Cor: ${it.cor}` : ""].filter(Boolean).join(" · ");
 
 function atualizarCarrinho(){
@@ -599,17 +605,23 @@ function carrossel(g){
   const wrap = document.createElement("div"); wrap.className = "foto";
   const trilho = document.createElement("div"); trilho.className = "trilho";
   const fotos = g.fotos.length ? g.fotos : [""];
-  fotos.forEach(f => {
+  fotos.forEach((f, idx) => {
     const slide = document.createElement("div"); slide.className = "slide";
     const img = document.createElement("img");
     img.loading = "lazy"; img.alt = nomeCompleto(g);
-    img.crossOrigin = "anonymous";                       // permite medir a foto; se o servidor não deixar, tenta sem
-    img.onload = () => ajustarFoto(img);
-    img.onerror = () => {
-      if (img.crossOrigin){ img.removeAttribute("crossorigin"); img.src = urlFoto(f); }
-      else { img.onerror = null; img.src = semFoto; }
+    // tenta o nome da foto e, se não existir, o mesmo nome em png/jpg/jpeg/webp;
+    // cada endereço é tentado com e sem permissão de medir a foto
+    const tent = variacoesFoto(f).flatMap(n => [[urlFoto(n), true], [urlFoto(n), false]]);
+    let k = 0;
+    const tentar = () => {
+      if (k >= tent.length){ img.onerror = null; img.src = semFoto; return; }
+      const [src, cors] = tent[k++];
+      if (cors) img.crossOrigin = "anonymous"; else img.removeAttribute("crossorigin");
+      img.src = src;
     };
-    img.src = urlFoto(f);
+    img.onload = () => { if (idx === 0 && img.src !== semFoto) g.fotoOk = img.src; ajustarFoto(img); };
+    img.onerror = tentar;
+    tentar();
     slide.append(img); trilho.append(slide);
   });
   wrap.append(trilho);
