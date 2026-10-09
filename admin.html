@@ -75,6 +75,10 @@
   .item small{color:var(--tinta-2)}
   .preco{font-weight:800}
   .vazio{color:var(--tinta-2);margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .chip{border:2px solid var(--linha);background:var(--papel);color:var(--tinta);border-radius:999px;padding:9px 16px;font-weight:600}
+  .chip[aria-pressed=true]{border-color:var(--azul);background:var(--foto-bg);color:var(--azul)}
+  .chip[aria-pressed=true]::after{content:" ✓"}
 
   #status{position:sticky;bottom:12px;z-index:5;border-radius:12px;padding:12px 14px;font-weight:600;border:1px solid var(--linha);background:var(--card);display:none}
   #status.ok{display:block;background:var(--ok-bg);border-color:var(--zap)}
@@ -170,19 +174,19 @@
     <input type="text" id="fModelo" list="modelosIphone" autocomplete="off" placeholder="iPhone 13 Pro Max">
     <datalist id="modelosIphone"></datalist>
 
-    <div class="duas">
-      <div>
-        <label for="fDetalhes">Detalhes <span class="dica" id="dicaDetalhes">(armazenamento)</span></label>
-        <input type="text" id="fDetalhes" autocomplete="off" placeholder="128GB">
-      </div>
-      <div>
-        <label for="fCond">Condição</label>
-        <select id="fCond">
-          <option value="Seminovo">Seminovo</option>
-          <option value="Novo">Novo</option>
-        </select>
-      </div>
+    <label id="lArm">Armazenamento <span class="dica">(toque para marcar)</span></label>
+    <div class="chips" id="chipsArm" role="group" aria-labelledby="lArm"></div>
+    <div id="boxRam" hidden>
+      <label id="lRam">Memória RAM <span class="dica">(opcional)</span></label>
+      <div class="chips" id="chipsRam" role="group" aria-labelledby="lRam"></div>
     </div>
+    <input type="hidden" id="fDetalhes">
+
+    <label for="fCond">Condição</label>
+    <select id="fCond">
+      <option value="Seminovo">Seminovo</option>
+      <option value="Novo">Novo</option>
+    </select>
 
     <label for="fPreco">Preço no atacado (R$)</label>
     <input type="text" id="fPreco" inputmode="decimal" autocomplete="off" placeholder="2890,00">
@@ -522,6 +526,37 @@ $("btnLinha").onclick = () => {
 };
 const atualizarCamposSemi = desenharLote;
 
+/* ============ ARMAZENAMENTO (botões) ============ */
+const ARMAZENAMENTOS = ["64GB","128GB","256GB","512GB","1TB","2TB"];
+const RAMS = ["4GB","6GB","8GB","12GB","16GB"];
+let armSel = "", ramSel = "";
+function lerDetalhes(){                       /* lê o texto salvo (ex.: "256GB · 8GB RAM") e marca os botões */
+  const t = $("fDetalhes").value;
+  const mr = t.match(/(\d+)\s*GB\s*RAM/i);
+  ramSel = mr ? mr[1] + "GB" : "";
+  const m = t.replace(/(\d+)\s*GB\s*RAM/i, "").match(/(\d+)\s*(GB|TB)/i);
+  armSel = m ? m[1] + m[2].toUpperCase() : "";
+}
+function gravarDetalhes(){
+  $("fDetalhes").value = [armSel, ramSel ? ramSel + " RAM" : ""].filter(Boolean).join(" · ");
+}
+function chips(boxId, opcoes, atual, aoClicar){
+  const box = $(boxId); box.replaceChildren();
+  const todas = atual && !opcoes.includes(atual) ? [...opcoes, atual] : opcoes;   /* valor antigo fora da lista continua marcado */
+  todas.forEach(v => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = v;
+    b.setAttribute("aria-pressed", v === atual ? "true" : "false");
+    b.onclick = () => aoClicar(v === atual ? "" : v);
+    box.append(b);
+  });
+}
+function desenharChips(){
+  chips("chipsArm", ARMAZENAMENTOS, armSel, v => { armSel = v; gravarDetalhes(); desenharChips(); });
+  chips("chipsRam", RAMS, ramSel, v => { ramSel = v; gravarDetalhes(); desenharChips(); });
+}
+function desenharArmazenamento(){ lerDetalhes(); desenharChips(); }
+
 /* ============ APPLE x ANDROID ============ */
 function definirPlat(p){
   S.plat = p;
@@ -530,7 +565,9 @@ function definirPlat(p){
   $("boxMarca").hidden = apple;
   $("fModelo").setAttribute("list", apple ? "modelosIphone" : "");
   $("fModelo").placeholder = apple ? "iPhone 13 Pro Max" : "Galaxy A55";
-  $("dicaDetalhes").textContent = apple ? "(armazenamento)" : "(armazenamento e RAM)";
+  $("boxRam").hidden = apple;                                /* RAM só para Android */
+  if (apple){ ramSel = ""; gravarDetalhes(); }
+  desenharArmazenamento();
   desenharLote();
 }
 $("plApple").onclick = () => definirPlat("Apple");
@@ -539,6 +576,7 @@ $("plAndroid").onclick = () => { definirPlat("Android"); $("fMarca").focus(); };
 /* ============ FORMULÁRIO ============ */
 function limparForm(){
   ["fModelo","fMarca","fDetalhes","fPreco","fCores","fParcelado"].forEach(id => $(id).value = "");
+  desenharArmazenamento();
   $("fCond").value = "Seminovo"; $("fDisp").checked = true;
   S.fotosForm = []; S.novasForm = []; S.editando = -1; S.lote = [novaLinha()];
   desenharLote();
@@ -630,7 +668,7 @@ function editar(i){
   S.editando = i;
   $("fCond").value = p.condicao === "Novo" || p.condicao === "Lacrado" ? "Novo" : "Seminovo";
   definirPlat(platDe(p)); $("fMarca").value = p.marca || "";
-  $("fModelo").value = p.modelo || ""; $("fDetalhes").value = p.detalhes || "";
+  $("fModelo").value = p.modelo || ""; $("fDetalhes").value = p.detalhes || ""; desenharArmazenamento();
   $("fPreco").value = p.preco != null ? String(p.preco).replace(".", ",") : "";
   const cores = (p.cores || []).length ? p.cores : [""];
   const q = p.qtd !== undefined && p.qtd !== null ? String(p.qtd) : (p.condicao === "Seminovo" ? "1" : "");
@@ -720,7 +758,7 @@ function desenharLista(){
       const bc = botao("Duplicar", () => {
         editar(i); S.editando = -1; S.novasForm = [];
         $("tFormulario").textContent = "Novo aparelho (cópia)"; $("btnAdicionar").textContent = "Adicionar ao estoque";
-        desenharMiniaturas(); $("fDetalhes").focus();
+        desenharMiniaturas(); const c1 = $("chipsArm").querySelector("button"); if (c1) c1.focus();
       });
       const bd = botao(p.disponivel === false ? "Mostrar" : "Ocultar", () => { p.disponivel = p.disponivel === false; desenharLista(); },
         p.disponivel === false ? "Marcar como disponível" : "Marcar como indisponível");
