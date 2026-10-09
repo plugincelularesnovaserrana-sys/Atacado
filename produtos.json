@@ -7,7 +7,7 @@
       "condicao": "Seminovo",
       "preco": 2700,
       "fotos": [
-        "iphone-12-pro-max-mv066bfl-1.jpg"
+        "iphone-12-pro-max-mv0aeq91-1.jpg"
       ],
       "cores": [
         "Dourado"
@@ -18,7 +18,9 @@
         "parcelas": 15,
         "parcela": 299.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 1,
+      "qtd": 4
     },
     {
       "plataforma": "Apple",
@@ -27,7 +29,7 @@
       "condicao": "Seminovo",
       "preco": 3599,
       "fotos": [
-        "iphone-15-mv066d66-2.jpg"
+        "iphone-15-mv0aer33-2.jpg"
       ],
       "cores": [
         "Preto"
@@ -38,7 +40,9 @@
         "parcelas": 15,
         "parcela": 399.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 2,
+      "qtd": 8
     },
     {
       "plataforma": "Apple",
@@ -47,7 +51,8 @@
       "condicao": "Seminovo",
       "preco": 3599,
       "fotos": [
-        "iphone-15-mv06nze2-1.jpg"
+        "iphone-15-mv0aer33-2.jpg",
+        "iphone-15-mv0aeryz-3.jpg"
       ],
       "cores": [
         "Rosa"
@@ -58,7 +63,9 @@
         "parcelas": 15,
         "parcela": 399.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 3,
+      "qtd": 3
     },
     {
       "plataforma": "Apple",
@@ -67,7 +74,7 @@
       "condicao": "Seminovo",
       "preco": 2899,
       "fotos": [
-        "iphone-14-mv06o120-2.jpg"
+        "iphone-14-mv0aesv8-4.jpg"
       ],
       "cores": [
         "Vermelho"
@@ -78,7 +85,9 @@
         "parcelas": 15,
         "parcela": 319.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 4,
+      "qtd": 5
     },
     {
       "plataforma": "Apple",
@@ -87,7 +96,8 @@
       "condicao": "Seminovo",
       "preco": 2899,
       "fotos": [
-        "iphone-14-mv06szwf-1.jpg"
+        "iphone-14-mv0aesv8-4.jpg",
+        "iphone-14-mv0aetpo-5.jpg"
       ],
       "cores": [
         "Lilás"
@@ -98,7 +108,9 @@
         "parcelas": 15,
         "parcela": 319.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 5,
+      "qtd": 6
     },
     {
       "plataforma": "Apple",
@@ -107,7 +119,7 @@
       "condicao": "Seminovo",
       "preco": 2690,
       "fotos": [
-        "iphone-14-mv06t1e9-2.jpg"
+        "iphone-14-mv0aeukc-6.jpg"
       ],
       "cores": [
         "Preto"
@@ -118,7 +130,9 @@
         "parcelas": 15,
         "parcela": 299.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 6,
+      "qtd": 4
     },
     {
       "plataforma": "Apple",
@@ -127,7 +141,8 @@
       "condicao": "Seminovo",
       "preco": 2690,
       "fotos": [
-        "iphone-14-mv06yw26-1.jpg"
+        "iphone-14-mv0aeukc-6.jpg",
+        "iphone-14-mv0aevds-7.jpg"
       ],
       "cores": [
         "Azul-claro"
@@ -138,7 +153,9 @@
         "parcelas": 15,
         "parcela": 299.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 7,
+      "qtd": 6
     },
     {
       "plataforma": "Apple",
@@ -147,7 +164,7 @@
       "condicao": "Seminovo",
       "preco": 2590,
       "fotos": [
-        "iphone-13-mv077eb7-1.jpg"
+        "iphone-13-mv0aewan-8.jpg"
       ],
       "cores": [
         "Preto"
@@ -158,7 +175,9 @@
         "parcelas": 15,
         "parcela": 289.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 8,
+      "qtd": 11
     },
     {
       "plataforma": "Apple",
@@ -167,7 +186,7 @@
       "condicao": "Seminovo",
       "preco": 2390,
       "fotos": [
-        "iphone-13-mv077fui-2.jpg"
+        "iphone-13-mv0aex9t-9.jpg"
       ],
       "cores": [
         "Vermelho"
@@ -178,7 +197,9 @@
         "parcelas": 15,
         "parcela": 269.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 9,
+      "qtd": 8
     },
     {
       "plataforma": "Apple",
@@ -187,7 +208,7 @@
       "condicao": "Seminovo",
       "preco": 2049,
       "fotos": [
-        "iphone-12-mv07cp1w-1.jpg"
+        "iphone-12-mv0aey7s-10.jpg"
       ],
       "cores": [
         "Azul"
@@ -198,7 +219,9 @@
         "parcelas": 15,
         "parcela": 229.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 10,
+      "qtd": 1
     },
     {
       "plataforma": "Apple",
@@ -207,7 +230,8 @@
       "condicao": "Seminovo",
       "preco": 2049,
       "fotos": [
-        "iphone-12-mv07cqs1-2.jpg"
+        "iphone-12-mv0aey7s-10.jpg",
+        "iphone-12-mv0aez6f-11.jpg"
       ],
       "cores": [
         "Vermelho"
@@ -218,16 +242,18 @@
         "parcelas": 15,
         "parcela": 229.9
       },
-      "disponivel": true
+      "disponivel": true,
+      "id": 11,
+      "qtd": 1
     },
     {
       "plataforma": "Android",
       "modelo": "15",
       "detalhes": "256GB · 8GB RAM",
       "condicao": "Novo",
-      "preco": 1559,
+      "preco": 1150,
       "fotos": [
-        "15-mv07qbdb-1.jpg"
+        "15-mv0aezzo-12.jpg"
       ],
       "cores": [
         "Preto"
@@ -238,16 +264,18 @@
         "parcela": 239.9
       },
       "disponivel": true,
-      "marca": "Redmi"
+      "marca": "Redmi",
+      "id": 12,
+      "qtd": 8
     },
     {
       "plataforma": "Android",
       "modelo": "Note 60x",
       "detalhes": "128GB · 4GB RAM",
       "condicao": "Novo",
-      "preco": 989,
+      "preco": 730,
       "fotos": [
-        "note-60x-mv07qdb3-2.jpg"
+        "note-60x-mv0af0sx-13.jpg"
       ],
       "cores": [
         "Verde"
@@ -258,7 +286,9 @@
         "parcela": 159.9
       },
       "disponivel": true,
-      "marca": "Realme"
+      "marca": "Realme",
+      "id": 13,
+      "qtd": 10
     }
   ]
 }
