@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atacado - Plugin Celulares</title>
+<meta name="description" content="Atacado de celulares novos e seminovos. Monte seu pedido e envie pelo WhatsApp.">
+
+<!-- Prévia de link (WhatsApp, Facebook, Instagram, Telegram...) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Plugin Celulares">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Atacado - Plugin Celulares">
+<meta property="og:description" content="Atacado de celulares novos e seminovos. Monte seu pedido e envie pelo WhatsApp.">
+<meta property="og:url" content="https://plugincelularesnovaserrana-sys.github.io/Atacado/">
+<meta property="og:image" content="https://plugincelularesnovaserrana-sys.github.io/Vitrine/assets/og-catalogo.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="iPhone 18 Pro Max - Catálogo Virtual Plugin Celulares">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Atacado - Plugin Celulares">
+<meta name="twitter:description" content="Atacado de celulares novos e seminovos. Monte seu pedido e envie pelo WhatsApp.">
+<meta name="twitter:image" content="https://plugincelularesnovaserrana-sys.github.io/Vitrine/assets/og-catalogo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel:#F4F4F6; --card:#FFFFFF; --tinta:#16181D; --tinta-2:#5E6470; --linha:#E3E5EA;
+    --preco:#1B3FE0; --zap:#17A34A; --zap-hover:#128A3D; --foto-bg:#F0F1F4; --aba:#1E2133; --erro:#C8332F;
+    --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+    --texto:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --papel:#0E1015; --card:#171A21; --tinta:#EEF0F4; --tinta-2:#9AA0AD; --linha:#262A33;
+           --preco:#8AA2FF; --foto-bg:#1F232C; --aba:#EEF0F4; --erro:#FF7B76; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);line-height:1.4}
+  button{font:inherit}
+  :focus-visible{outline:3px solid var(--preco);outline-offset:2px}
+  svg{display:block}
+
+  /* Cabeçalho */
+  .loja{max-width:1180px;margin:0 auto;padding:20px 16px 8px;display:flex;gap:14px;align-items:center}
+  .logo{flex:none;width:64px;height:64px;border-radius:50%;background:var(--aba);color:var(--papel);display:grid;place-items:center;overflow:hidden;font-family:var(--display);font-weight:800;font-size:1.6rem}
+  .logo img{width:100%;height:100%;object-fit:cover}
+  .loja h1{font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,4vw,2rem);letter-spacing:-.02em;line-height:1.05;margin:0 0 4px}
+  .loja p{margin:0;color:var(--tinta-2);font-size:.9rem}
+  .selos{max-width:1180px;margin:0 auto;padding:8px 16px;display:flex;gap:8px;overflow-x:auto}
+  .selos span{flex:none;background:var(--card);border:1px solid var(--linha);border-radius:999px;padding:7px 14px;font-weight:600;font-size:.85rem}
+
+  /* Busca, carrinho e filtros */
+  .barra{position:sticky;top:0;z-index:5;background:var(--papel);padding:10px 0 0;border-bottom:1px solid var(--linha)}
+  .barra-in{max-width:1180px;margin:0 auto;padding:0 16px}
+  .linha1{display:flex;gap:10px}
+  .busca{flex:1;min-width:0;padding:12px 16px;border:1px solid var(--linha);border-radius:12px;background:var(--card);color:var(--tinta);font:inherit}
+  .btn-carrinho{position:relative;flex:none;display:flex;align-items:center;gap:8px;border:0;border-radius:12px;background:var(--aba);color:var(--papel);padding:0 16px;font-weight:700;cursor:pointer}
+  .btn-carrinho svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .btn-carrinho .n{position:absolute;top:-6px;right:-6px;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--zap);color:#fff;font-size:.78rem;display:grid;place-items:center}
+  .btn-carrinho .n[hidden]{display:none}
+  .btn-meus{flex:none;border:1px solid var(--linha);background:var(--card);color:var(--tinta);border-radius:12px;padding:0 14px;font-weight:700;cursor:pointer}
+  .btn-meus[hidden]{display:none}
+  .linha2{display:flex;gap:10px;align-items:center}
+  .abas{flex:1;min-width:0;display:flex;gap:8px;overflow-x:auto;padding:10px 0}
+  .abas button{flex:none;border:1px solid var(--linha);background:var(--card);color:var(--tinta);padding:8px 16px;border-radius:999px;font-weight:600;cursor:pointer}
+  .abas button[aria-pressed="true"]{background:var(--aba);color:var(--papel);border-color:var(--aba)}
+  .ordem{flex:none;border:1px solid var(--linha);background:var(--card);color:var(--tinta);border-radius:10px;padding:8px 10px;font:inherit;font-size:.85rem}
+
+  .aviso{max-width:1180px;margin:0 auto;padding:10px 16px 0;font-size:.85rem;color:var(--tinta-2)}
+  .contagem{max-width:1180px;margin:0 auto;padding:12px 16px 0;font-size:.85rem;color:var(--tinta-2);display:flex;align-items:center;flex-wrap:wrap}
+  .vivo{display:inline-flex;align-items:center;gap:6px;margin-left:12px;font-weight:600}
+  .vivo::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--zap);box-shadow:0 0 0 3px rgba(23,163,74,.22)}
+  .vivo.off::before{background:#C98A1B;box-shadow:0 0 0 3px rgba(201,138,27,.22)}
+  .vivo[hidden]{display:none}
+
+  /* Grade */
+  .grade{max-width:1180px;margin:0 auto;padding:10px 16px 110px;display:grid;column-gap:14px;row-gap:0;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+  @media (max-width:520px){.grade{grid-template-columns:1fr;padding-inline:12px}}
+  .item{background:var(--card);border:1px solid var(--linha);border-radius:16px;overflow:hidden;margin-bottom:14px;display:grid;grid-row:span 2;grid-template-rows:subgrid;row-gap:0}
+
+  .foto{position:relative;overflow:hidden;background:#fff}
+  .trilho{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .trilho::-webkit-scrollbar{display:none}
+  .slide{position:relative;flex:0 0 100%;min-width:0;overflow:hidden;scroll-snap-align:center}
+  .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:10px}
+  .slide img.ajustada{inset:auto;object-fit:fill;padding:0}
+  .seta{position:absolute;top:50%;transform:translateY(-50%);width:24px;height:24px;border:0;border-radius:50%;background:rgba(255,255,255,.85);color:#16181D;font-size:1.1rem;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .seta.ant{left:6px}.seta.prox{right:6px}
+  .pontos{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px}
+  .pontos i{width:6px;height:6px;border-radius:50%;background:var(--tinta);opacity:.25}
+  .pontos i.on{opacity:.8}
+  .noCarrinho{position:absolute;top:6px;left:6px;background:var(--zap);color:#fff;font-weight:700;font-size:.66rem;border-radius:999px;padding:2px 8px}
+  .esgotado{position:absolute;top:6px;right:6px;background:var(--erro);color:#fff;font-weight:700;font-size:.66rem;border-radius:999px;padding:2px 8px}
+  .noCarrinho[hidden],.esgotado[hidden]{display:none}
+
+  /* Cabeçalho do card: foto pequena + dados do modelo */
+  .cab{display:grid;grid-template-columns:112px minmax(0,1fr);gap:12px;padding:12px}
+  .cab .foto{width:112px;height:112px;border-radius:12px;border:1px solid var(--linha)}
+  .cab-info{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .marca{margin:0;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-2)}
+  .preco-bloco{margin-top:auto;padding-top:6px}
+  .vars-box{flex:1;display:flex;flex-direction:column;border-top:1px solid var(--linha);padding:10px 12px 12px}
+  .vars-box>.rotulo{margin:0 0 8px}
+  @media (max-width:360px){.cab{grid-template-columns:96px minmax(0,1fr)}.cab .foto{width:96px;height:96px}}
+  .modelo{font-family:var(--display);font-weight:700;font-size:1.02rem;line-height:1.15;margin:0}
+  .detalhes{margin:0;color:var(--tinta-2);font-size:.82rem}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .tag{background:var(--foto-bg);border-radius:6px;padding:2px 8px;font-size:.75rem;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+  .tag svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .tag.bat{background:#E6F6EC;color:#0F6B33}
+  .tag.bat.baixa{background:#FFF1D6;color:#8A5A00}
+  @media (prefers-color-scheme:dark){.tag.bat{background:#12281B;color:#7BE0A1}.tag.bat.baixa{background:#33260B;color:#F2C26B}}
+  .obs{margin:6px 0 0;font-size:.78rem;color:var(--tinta-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .rotulo{margin:0;font-size:.72rem;color:var(--tinta-2);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .valor{font-family:var(--display);font-weight:800;font-size:clamp(1.3rem,5vw,1.55rem);letter-spacing:-.03em;color:var(--preco);line-height:1.05}
+  .vars{display:grid;gap:8px;max-height:340px;overflow-y:auto;overscroll-behavior:contain}
+  .var{border:1px solid var(--linha);border-radius:12px;padding:10px;display:grid;gap:6px;background:var(--papel)}
+  .var.off{opacity:.6}
+  .var-topo{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .var-nome{font-weight:700;font-size:.92rem}
+  .dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.25);flex:none}
+  .disp{margin-left:auto;font-size:.78rem;color:var(--tinta-2);font-weight:600}
+  .var-preco{font-weight:800;color:var(--preco);font-size:.9rem}
+  .var .obs{margin:0}
+  .var-ctl{display:flex;gap:8px;align-items:center}
+  .var-ctl .qtd[hidden]{display:none}
+  .var-ctl .qtd button{width:32px;height:36px}
+  .add-btn{flex:1;display:flex;justify-content:center;align-items:center;gap:8px;background:var(--zap);color:#fff;border:0;font-weight:700;padding:10px 12px;border-radius:10px;cursor:pointer;min-height:38px}
+  .add-btn:hover:not(:disabled){background:var(--zap-hover)}
+  .add-btn:disabled{background:var(--foto-bg);color:var(--tinta-2);cursor:default}
+  .add-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .vazio{grid-column:1/-1;text-align:center;color:var(--tinta-2);padding:48px 16px}
+
+  /* Barra do pedido (aparece com itens) */
+  .barra-pedido{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:6;width:min(560px,calc(100% - 24px));display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--zap);color:#fff;border:0;border-radius:14px;padding:14px 18px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.28);cursor:pointer}
+  .barra-pedido[hidden]{display:none}
+  .barra-pedido span:last-child{font-family:var(--display);font-size:1.1rem}
+
+  /* Carrinho (gaveta) */
+  .veu{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s .2s}
+  .veu.on{opacity:1;visibility:visible;transition:opacity .2s}
+  .gaveta{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--card);z-index:21;display:flex;flex-direction:column;transform:translateX(100%);visibility:hidden;transition:transform .25s,visibility 0s .25s;box-shadow:-8px 0 30px rgba(0,0,0,.25)}
+  .gaveta.on{transform:none;visibility:visible;transition:transform .25s}
+  .g-topo{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--linha)}
+  .g-topo h2{font-family:var(--display);font-size:1.3rem;margin:0}
+  .fechar{border:0;background:var(--foto-bg);color:var(--tinta);width:36px;height:36px;border-radius:50%;font-size:1.3rem;line-height:1;cursor:pointer}
+  .g-alerta{margin:12px 16px 0;padding:12px 14px;border-radius:12px;background:#FCEBEA;border:1px solid var(--erro);color:#8F1F1B;font-size:.88rem;line-height:1.35}
+  .g-alerta.aviso{background:#FFF4DB;border-color:#E0A526;color:#6B4A00}
+  .g-alerta[hidden]{display:none}
+  @media (prefers-color-scheme:dark){
+    .g-alerta{background:#321816;color:#FFB4B0}
+    .g-alerta.aviso{background:#33260B;border-color:#B8851C;color:#F2C26B}
+  }
+  .g-lista{flex:1;overflow-y:auto;padding:8px 16px}
+  .g-vazio{text-align:center;color:var(--tinta-2);padding:48px 12px}
+  .linha-item{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--linha)}
+  .linha-item img{width:64px;height:64px;object-fit:contain;background:var(--foto-bg);border-radius:10px;padding:4px}
+  .linha-item h3{margin:0;font-family:var(--display);font-size:.98rem;line-height:1.2}
+  .linha-item .sub{margin:2px 0 0;font-size:.78rem;color:var(--tinta-2)}
+  .linha-baixo{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .qtd{display:inline-flex;align-items:center;border:1px solid var(--linha);border-radius:10px;overflow:hidden}
+  .qtd button{width:34px;height:34px;border:0;background:var(--foto-bg);color:var(--tinta);font-size:1.1rem;cursor:pointer}
+  .qtd button:disabled{opacity:.4;cursor:default}
+  .qtd span{min-width:34px;text-align:center;font-weight:700}
+  .unico{font-size:.78rem;color:var(--tinta-2);font-weight:600}
+  .subtotal{font-weight:800;color:var(--preco)}
+  .remover{border:0;background:none;color:var(--erro);font-weight:700;font-size:.82rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:6px 0}
+  .remover svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .g-rodape{border-top:1px solid var(--linha);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));display:grid;gap:10px}
+  .g-rodape[hidden]{display:none}
+  .g-rodape label{font-size:.82rem;font-weight:600}
+  .g-rodape input{width:100%;margin-top:4px;padding:11px 12px;border:1px solid var(--linha);border-radius:10px;background:var(--papel);color:var(--tinta);font:inherit;font-size:16px}
+  .total{display:flex;justify-content:space-between;align-items:baseline;font-weight:700}
+  .total strong{font-family:var(--display);font-size:1.5rem;color:var(--preco)}
+  .nota{margin:0;font-size:.8rem;color:var(--erro)}
+  .dica-g{margin:0;font-size:.78rem;color:var(--tinta-2)}
+  .finalizar{display:flex;justify-content:center;align-items:center;gap:8px;border:0;border-radius:12px;background:var(--zap);color:#fff;font-weight:700;padding:14px;cursor:pointer;text-decoration:none}
+  .finalizar:hover:not(:disabled){background:var(--zap-hover)}
+  .finalizar:disabled{opacity:.5;cursor:default}
+  .finalizar svg{width:20px;height:20px;fill:currentColor}
+  .limpar{border:0;background:none;color:var(--tinta-2);text-decoration:underline;cursor:pointer;font-size:.82rem}
+
+  /* Confirmação e "Meus pedidos" */
+  .ok-box{text-align:center;padding:28px 4px;display:grid;gap:12px;justify-items:center}
+  .ok-check{width:56px;height:56px;border-radius:50%;background:var(--zap);color:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:800}
+  .ok-box h3{font-family:var(--display);font-size:1.35rem;margin:0}
+  .ok-box p{margin:0;color:var(--tinta-2);font-size:.9rem}
+  .ok-box .finalizar{width:100%}
+  .btn-sec{width:100%;border:1px solid var(--linha);background:var(--foto-bg);color:var(--tinta);border-radius:12px;padding:12px;font-weight:700;cursor:pointer}
+  .ped{border:1px solid var(--linha);border-radius:14px;padding:12px;margin:10px 0;display:grid;gap:6px}
+  .ped-topo{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .ped-topo strong{font-family:var(--display);font-size:1.05rem}
+  .ped small{color:var(--tinta-2)}
+  .ped ul{margin:0;padding-left:18px;font-size:.85rem}
+  .ped .tot{font-weight:800;color:var(--preco)}
+  .ped a{color:var(--preco);font-weight:700}
+  .chip{font-size:.72rem;font-weight:700;border-radius:999px;padding:3px 10px;background:var(--foto-bg)}
+  .chip.novo{background:#FFF1D6;color:#8A5A00}
+  .chip.ok{background:#E6F6EC;color:#0F6B33}
+  .chip.fim{background:#E3E9FF;color:#1B3FE0}
+  .chip.off{background:#FCEBEA;color:#8F1F1B}
+  @media (prefers-color-scheme:dark){
+    .chip.novo{background:#33260B;color:#F2C26B}.chip.ok{background:#12281B;color:#7BE0A1}
+    .chip.fim{background:#1B2547;color:#8AA2FF}.chip.off{background:#321816;color:#FFB4B0}
+  }
+
+  .toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,10px);background:var(--aba);color:var(--papel);padding:10px 16px;border-radius:999px;font-weight:600;font-size:.88rem;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 24px);text-align:center}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  .sistema{max-width:1180px;margin:0 auto;padding:8px 16px 48px}
+  .sistema h2{font-family:var(--display);font-size:1.5rem;letter-spacing:-.02em;margin:0 0 12px}
+  .sistema iframe{width:100%;height:640px;border:1px solid var(--linha);border-radius:14px;background:var(--card)}
+  .rodape{border-top:1px solid var(--linha);padding:20px 16px 100px;text-align:center;color:var(--tinta-2);font-size:.85rem}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="loja">
+  <div class="logo" id="logo"></div>
+  <div>
+    <h1 id="nomeLoja">Nome da Loja</h1>
+    <p id="slogan"></p>
+    <p id="contato"></p>
+  </div>
+</header>
+<div class="selos" id="selos"></div>
+
+<div class="barra">
+  <div class="barra-in">
+    <div class="linha1">
+      <input class="busca" id="busca" type="search" placeholder="Buscar modelo..." aria-label="Buscar modelo">
+      <button class="btn-meus" id="abrirPedidos" type="button" hidden>Meus pedidos</button>
+      <button class="btn-carrinho" id="abrirCarrinho" type="button" aria-label="Abrir carrinho">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 7H6"/></svg>
+        <span class="txt">Carrinho</span><span class="n" id="contaCarrinho" hidden>0</span>
+      </button>
+    </div>
+    <div class="linha2">
+      <nav class="abas" id="abas" aria-label="Filtrar por categoria"></nav>
+      <select class="ordem" id="ordem" aria-label="Ordenar">
+        <option value="">Ordenar</option>
+        <option value="menor">Menor preço</option>
+        <option value="maior">Maior preço</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="aviso" id="aviso" hidden></div>
+<div class="contagem"><span id="contagemTxt"></span><span class="vivo" id="vivo" hidden></span></div>
+<main class="grade" id="grade" aria-live="polite"></main>
+
+<section class="sistema" id="sistemaBox" hidden>
+  <h2 id="sistemaTitulo">Nosso sistema</h2>
+  <iframe id="sistemaFrame" title="Sistema da loja" loading="lazy"></iframe>
+</section>
+
+<footer class="rodape">Valores de atacado e disponibilidade sujeitos a confirmação no atendimento.</footer>
+
+<button class="barra-pedido" id="barraPedido" type="button" hidden>
+  <span id="barraTxt"></span><span id="barraTotal"></span>
+</button>
+
+<div class="veu" id="veu"></div>
+<aside class="gaveta" id="gaveta" role="dialog" aria-modal="true" aria-labelledby="gTitulo" aria-hidden="true">
+  <div class="g-topo">
+    <h2 id="gTitulo">Seu pedido</h2>
+    <button class="fechar" id="fecharCarrinho" type="button" aria-label="Fechar">×</button>
+  </div>
+  <div class="g-alerta" id="gAlerta" role="alert" hidden></div>
+  <div class="g-lista" id="gLista"></div>
+  <div class="g-rodape" id="gRodape">
+    <label for="cliente">Seu nome ou empresa <input id="cliente" type="text" autocomplete="name" placeholder="Ex.: João - Loja Central"></label>
+    <div class="total"><span id="gQtd"></span><strong id="gTotal"></strong></div>
+    <p class="nota" id="gNota" hidden></p>
+    <p class="dica-g" id="gDica" hidden>Ao enviar, os aparelhos ficam reservados para você e o resumo abre no WhatsApp.</p>
+    <button class="finalizar" id="finalizar" type="button"></button>
+    <button class="limpar" id="limpar" type="button">Esvaziar carrinho</button>
+  </div>
+</aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============ CONFIGURAÇÃO ============ */
+const CONFIG = {
+  loja: "Plugin Celulares",
+  slogan: "Atacado de celulares · novos e seminovos",
+  instagram: "",                  // ex.: "@minhaloja" (opcional)
+  cidade: "",                     // ex.: "Nova Serrana - MG" (opcional)
+  selos: ["Pronta entrega", "Preços de atacado"],
+  logo: "LOGO.png",               // arquivo dentro de assets/ (se não existir, usa a inicial da loja)
+  whatsapp: "5537991385331",      // DDI + DDD + número, só dígitos
+  whatsappPedidos: "5537991385331", // WhatsApp do ATACADO que recebe os pedidos (troque se for outro número)
+  pedidoMinimo: 0,                // valor mínimo do pedido em R$ (0 = sem mínimo)
+  pastaMidias: "assets/",
+  listaUrl: "https://raw.githubusercontent.com/plugincelularesnovaserrana-sys/Atacado/main/produtos.json",
+  token: "",
+  tokenModo: "query",
+  sistemaUrl: "",
+  sistemaTitulo: "Nosso sistema",
+  configUrl: "config.json",       // dados do Firebase (reservas de estoque e pedidos); fica ao lado do index.html
+  atualizarListaMs: 45000         // de quanto em quanto tempo confere o produtos.json
+};
+
+/* ============ DEMONSTRAÇÃO ============ */
+const DEMO = [
+  {id:1, modelo:"iPhone 13", detalhes:"128GB", condicao:"Seminovo", preco:2890, cores:"Azul", bateria:89, qtd:3},
+  {id:2, modelo:"iPhone 13", detalhes:"128GB", condicao:"Seminovo", preco:2890, cores:"Azul", bateria:91, qtd:2},
+  {id:3, modelo:"iPhone 13", detalhes:"128GB", condicao:"Seminovo", preco:2890, cores:"Preto", bateria:85, qtd:5, observacao:"Pequeno risco na lateral"},
+  {id:4, modelo:"iPhone 14 Pro", detalhes:"256GB", condicao:"Seminovo", preco:4290, cores:"Preto", bateria:92, qtd:1},
+  {id:5, modelo:"Galaxy A55", detalhes:"256GB", condicao:"Novo", preco:1990, fotos:"a55.jpg", cores:"Azul", qtd:12},
+  {id:6, modelo:"Galaxy A55", detalhes:"256GB", condicao:"Novo", preco:1990, cores:"Preto", qtd:8},
+  {id:7, modelo:"Galaxy S22", detalhes:"128GB", condicao:"Seminovo", preco:1750, fotos:"s22.jpg", cores:"Verde", qtd:1, observacao:"Tela original, sem marcas de uso"}
+];
+
+/* ============ UTILITÁRIOS ============ */
+const $ = id => document.getElementById(id);
+const brl = n => n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const esperar = ms => new Promise(r => setTimeout(r, ms));
+const nomeCompleto = x => x.marca && !x.modelo.toLowerCase().startsWith(x.marca.toLowerCase()) ? x.marca + " " + x.modelo : x.modelo;
+const semFoto = "data:image/svg+xml;utf8," + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect x="38" y="14" width="44" height="92" rx="8" fill="none" stroke="#9aa0ad" stroke-width="3"/><circle cx="60" cy="94" r="3" fill="#9aa0ad"/></svg>');
+const ICONE_ZAP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm5.2 13.9c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.4-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg>';
+const ICONE_CARRINHO = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.4 11.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21 7H6"/></svg>';
+const ICONE_LIXO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
+const ICONE_BAT = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="17" height="10" rx="2"/><path d="M22 11v2"/></svg>';
+
+const MAPA_CORES = {
+  "preto":"#1c1c1e","branco":"#f5f5f0","azul":"#3b6fd8","rosa":"#f4b8c8","verde":"#4f7a5a","amarelo":"#f2d86b",
+  "vermelho":"#c8332f","roxo":"#8b6bc9","dourado":"#d9bf94","prata":"#d5d7db","cinza":"#8e9096","laranja":"#e8873a",
+  "meia-noite":"#232a35","estelar":"#e6e0d4","ultramarino":"#6a6bf0","titânio natural":"#b9ad9d","titânio azul":"#4b5468",
+  "titânio preto":"#3a3a3c","titânio branco":"#e4e2dc","titanio natural":"#b9ad9d","titanio azul":"#4b5468",
+  "titanio preto":"#3a3a3c","titanio branco":"#e4e2dc","lilás":"#c4a1ff","azul-claro":"#7dd3fc","bege":"#e8d8b8","marrom":"#7a4a2a"
+};
+
+function paraNumero(v){
+  if (typeof v === "number") return v;
+  let s = String(v ?? "").replace(/[^\d,.-]/g,"");
+  if (s.includes(",")) s = s.replace(/\./g,"").replace(",",".");
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+const lista = v => Array.isArray(v) ? v.map(String) : String(v ?? "").split(",").map(x => x.trim()).filter(Boolean);
+const hash = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
+
+const rotuloCond = c => {
+  const k = String(c || "").trim().toLowerCase();
+  if (["novo","novos","lacrado","lacrados"].includes(k)) return "Novo";
+  if (["seminovo","seminovos","usado"].includes(k)) return "Seminovo";
+  return String(c || "").trim();
+};
+const plural = c => c === "Novo" ? "Novos" : c === "Seminovo" ? "Seminovos" : c;
+
+const arquivoDoModelo = m => m.toLowerCase().replace(/\s+/g, " ").trim() + ".png";
+function fotosDe(valor, modelo){
+  const l = lista(valor).map(f => /\.[a-z0-9]{3,4}$/i.test(f) || /^(https?:|data:|\/)/.test(f) ? f : f + ".png");
+  return l.length ? l : (modelo ? [arquivoDoModelo(modelo)] : []);
+}
+
+function normalizar(p){
+  const nd = String(p.disponivel ?? "").toLowerCase();
+  const modelo = String(p.modelo ?? p.nome ?? "").trim();
+  const cond = rotuloCond(p.condicao ?? p.condição);
+  const familia = String(p.familia ?? "").trim() || (/^iphone/i.test(modelo) ? "iPhone" : "Android");
+  const bat = Math.round(paraNumero(p.bateria));
+  const q = p.qtd ?? p.quantidade;
+  const qn = (q === undefined || q === null || q === "") ? null : Math.max(0, parseInt(q, 10) || 0);
+  return {
+    id: p.id ? String(p.id) : "",
+    familia,
+    grupo: (familia + " " + plural(cond)).trim(),
+    modelo,
+    marca: familia === "iPhone" ? "" : String(p.marca ?? "").trim(),
+    detalhes: String(p.detalhes ?? p.descricao ?? "").trim(),
+    condicao: cond,
+    preco: paraNumero(p.preco ?? p.avista),
+    bateria: bat >= 1 && bat <= 100 ? bat : null,
+    observacao: String(p.observacao ?? p.obs ?? "").trim(),
+    estoque: qn !== null ? qn : (cond === "Seminovo" ? 1 : null),   // null = estoque livre (cadastro antigo de novo)
+    fotosProprias: fotosDe(p.fotos ?? p.foto, ""),
+    fotos: fotosDe(p.fotos ?? p.foto, modelo),
+    cores: lista(p.cores),
+    disponivel: !(p.disponivel === false || nd === "nao" || nd === "não")
+  };
+}
+
+// JSON (lista ou {produtos:[...]}) ou texto, uma linha por aparelho:
+// modelo | detalhes | condição | preço | foto1,foto2 | cor1,cor2 | bateria | observação
+function lerLista(texto){
+  const t = texto.trim();
+  if (t.startsWith("[") || t.startsWith("{")){
+    const j = JSON.parse(t);
+    return (Array.isArray(j) ? j : (j.produtos || j.items || [])).map(normalizar);
+  }
+  return t.split(/\r?\n/).filter(l => l.trim() && !l.trim().startsWith("#")).map(l => {
+    const c = l.split("|").map(x => x.trim());
+    return normalizar({modelo:c[0], detalhes:c[1], condicao:c[2], preco:c[3], fotos:c[4], cores:c[5], bateria:c[6], observacao:c[7]});
+  });
+}
+
+/* Baixa o produtos.json. O "?v=" evita o cache do GitHub, para o estoque novo aparecer rápido. */
+async function buscarTexto(){
+  const headers = {};
+  let url = CONFIG.listaUrl;
+  if (CONFIG.token){
+    if (CONFIG.tokenModo === "header") headers.Authorization = "Bearer " + CONFIG.token;
+    else url += (url.includes("?") ? "&" : "?") + "token=" + encodeURIComponent(CONFIG.token);
+  }
+  url += (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+  const r = await fetch(url, {headers, cache:"no-store"});
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.text();
+}
+
+let ultimoTexto = "";
+async function carregar(){
+  if (!CONFIG.listaUrl){
+    $("aviso").hidden = false;
+    $("aviso").textContent = "Modo demonstração: defina CONFIG.listaUrl para carregar a lista real.";
+    return DEMO.map(normalizar);
+  }
+  const t = await buscarTexto();
+  const itens = lerLista(t);
+  ultimoTexto = t;
+  return itens;
+}
+
+/* ============ RESERVAS (a regra do "primeiro que pede leva") ============ */
+// Recebe o que já está reservado, quanto cada item quer reservar (+) ou devolver (−)
+// e o limite (estoque físico) de cada item. Se algum item passar do limite, devolve
+// o conflito e NADA é reservado (tudo ou nada).
+function aplicarDeltas(atual, deltas, limites){
+  const novo = Object.assign({}, atual || {}), conflitos = [];
+  Object.keys(deltas).forEach(k => {
+    const a = Number(novo[k]) || 0, d = deltas[k], lim = limites ? limites[k] : undefined;
+    if (d > 0 && lim !== undefined && a + d > lim){
+      conflitos.push({chave: k, quer: d, resta: Math.max(0, lim - a)});
+      return;
+    }
+    const nv = Math.max(0, a + d);
+    if (nv > 0) novo[k] = nv; else delete novo[k];
+  });
+  return {novo, conflitos};
+}
+
+let FB = null, reservas = {}, conectado = false;
+const FB_VERSAO = "10.12.2";
+
+async function iniciarFirebase(){
+  let cfg = null;
+  try {
+    const r = await fetch(CONFIG.configUrl + "?v=" + Date.now(), {cache:"no-store"});
+    if (r.ok) cfg = (await r.json()).firebase;
+  } catch (e) { cfg = null; }
+  if (!cfg || !cfg.apiKey || !cfg.databaseURL || /COLE_AQUI/i.test(cfg.apiKey)) return null;   // sem config: segue no modo antigo
+  const base = `https://www.gstatic.com/firebasejs/${FB_VERSAO}/`;
+  const [app, dbm] = await Promise.all([import(base + "firebase-app.js"), import(base + "firebase-database.js")]);
+  const a = app.initializeApp(cfg);
+  return Object.assign({db: dbm.getDatabase(a)}, dbm);
+}
+
+function marcarVivo(){
+  const v = $("vivo");
+  v.hidden = !FB;
+  if (!FB) return;
+  v.classList.toggle("off", !conectado);
+  v.textContent = conectado ? "Estoque em tempo real" : "Reconectando…";
+}
+
+function ligarReservas(){
+  return new Promise(ok => {
+    let feito = false;
+    const fim = () => { if (!feito){ feito = true; ok(); } };
+    setTimeout(fim, 4000);
+    FB.onValue(FB.ref(FB.db, "reservas"), s => {
+      reservas = s.val() || {};
+      if (feito) aplicarDisp(); else fim();
+    }, err => {
+      console.error("Reservas indisponíveis:", err);
+      FB = null; marcarVivo();
+      $("aviso").hidden = false;
+      $("aviso").textContent = "Reservas automáticas indisponíveis no momento. O pedido segue normalmente pelo WhatsApp.";
+      fim();
+    });
+    FB.onValue(FB.ref(FB.db, ".info/connected"), s => { conectado = s.val() === true; marcarVivo(); });
+  });
+}
+
+/* ============ AGRUPAMENTO (modelo → variações) ============ */
+const LS_CARRINHO = "atacado-carrinho-v3", LS_CLIENTE = "atacado-cliente", LS_MEUS = "atacado-meus-pedidos";
+let produtos = [], grupos = [], abaAtiva = "Todos os produtos", cart = [], atualizadores = [];
+let ocupado = false, enviando = false, modo = "carrinho", pedidoRecente = null;
+let meus = [], pedidosVivos = {}, statusAnt = {}, unsubs = [];
+
+const calcDisp = v => v.estoque === null ? null : Math.max(0, v.estoque - (Number(reservas[v.chave]) || 0));
+const maxDe = v => v.estoque === null ? 99 : Math.min(99, v.disp || 0);
+
+function agrupar(lista){
+  const mapa = new Map();
+  lista.filter(p => p.disponivel && p.preco > 0 && (p.estoque === null || p.estoque > 0)).forEach(p => {
+    const gk = [p.marca, p.modelo, p.detalhes, p.condicao].map(x => String(x).trim().toLowerCase()).join("|");
+    let g = mapa.get(gk);
+    if (!g){
+      g = {chave: gk, modelo: p.modelo, marca: p.marca, detalhes: p.detalhes, condicao: p.condicao, grupo: p.grupo,
+           proprias: [], fallback: p.fotos, variantes: []};
+      mapa.set(gk, g);
+    }
+    p.fotosProprias.forEach(f => { if (!g.proprias.includes(f)) g.proprias.push(f); });
+    const cores = p.cores.length ? p.cores : [""];
+    const expandir = p.estoque === null && cores.length > 1;      // cadastro antigo: várias cores, sem estoque
+    (expandir ? cores : [cores[0]]).forEach(cor => {
+      // A chave identifica o item nas reservas. Usa o código (id) do registro, que não muda quando o preço muda.
+      const base = p.id ? "i" + p.id
+        : "h" + hash([gk, cor, p.bateria || "", p.observacao || ""].join("|").toLowerCase());
+      const chave = expandir ? base + "_" + hash(cor.toLowerCase()) : base;
+      if (g.variantes.some(v => v.chave === chave)) return;
+      g.variantes.push({key: chave, chave, id: p.id, cor, bateria: p.bateria, observacao: p.observacao,
+                        preco: p.preco, estoque: p.estoque, disp: null});
+    });
+  });
+  return [...mapa.values()].map(g => {
+    g.fotos = g.proprias.length ? g.proprias : g.fallback;
+    g.variantes.forEach(v => { v.disp = calcDisp(v); });
+    g.variantes.sort((a, b) =>
+      ((a.disp === 0) - (b.disp === 0)) || a.preco - b.preco || (b.bateria || 0) - (a.bateria || 0) || a.cor.localeCompare(b.cor));
+    const precos = g.variantes.map(v => v.preco);
+    g.precoMin = Math.min(...precos); g.precoMax = Math.max(...precos);
+    return g;
+  });
+}
+const mapaVariantes = () => { const m = new Map(); grupos.forEach(g => g.variantes.forEach(v => m.set(v.key, v))); return m; };
+
+/* ============ CARRINHO ============ */
+const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const ler = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+function lerCarrinho(){
+  try {
+    const j = JSON.parse(ler(LS_CARRINHO) || "[]");
+    return Array.isArray(j) ? j.filter(i => i && i.key && i.preco > 0 && i.qtd > 0) : [];
+  } catch (e) { return []; }
+}
+const salvarCarrinho = () => guardar(LS_CARRINHO, JSON.stringify(cart));
+const achaNoCarrinho = key => cart.find(i => i.key === key);
+const qtdTotal = () => cart.reduce((n, i) => n + i.qtd, 0);
+const valorTotal = () => cart.reduce((n, i) => n + i.qtd * i.preco, 0);
+const nomeItem = i => [i.modelo, i.detalhes, i.cor].filter(Boolean).join(" ");
+
+// Tira do carrinho o que saiu da lista, atualiza preço e limita ao estoque que ainda está livre.
+// Devolve a lista de mudanças para avisar o cliente.
+function conferirCarrinho(){
+  const vs = mapaVariantes(), msgs = [];
+  cart = cart.filter(i => {
+    const v = vs.get(i.key);
+    if (!v){ msgs.push(`${nomeItem(i)} saiu da lista`); return false; }
+    const max = maxDe(v);
+    if (max <= 0){ msgs.push(`${nomeItem(i)} esgotou`); return false; }
+    if (i.preco !== v.preco){ msgs.push(`${nomeItem(i)} mudou de preço (${brl(v.preco)})`); i.preco = v.preco; }
+    i.max = max;
+    if (i.qtd > max){ msgs.push(`${nomeItem(i)}: restam ${max} un.`); i.qtd = max; }
+    return true;
+  });
+  salvarCarrinho();
+  return msgs;
+}
+
+// Recalcula o que está livre (estoque do JSON menos o que está reservado) e atualiza a tela sem refazer os cards.
+function aplicarDisp(silencioso){
+  grupos.forEach(g => g.variantes.forEach(v => { v.disp = calcDisp(v); }));
+  const msgs = enviando ? [] : conferirCarrinho();   // enquanto envia o pedido, não mexe no carrinho
+  atualizarCarrinho();
+  if (msgs.length && !silencioso) avisarCarrinho(msgs);
+  return msgs;
+}
+function avisarCarrinho(msgs){
+  mostrarAlerta("Seu carrinho foi atualizado com o estoque atual: " + msgs.join("; ") + ".", "aviso");
+  toast("Carrinho atualizado com o estoque atual", 3200);
+}
+
+function adicionar(g, v, n){
+  const max = maxDe(v), ex = achaNoCarrinho(v.key);
+  if (max <= 0){ toast("Item esgotado"); return; }
+  if (ex){
+    const novo = Math.min(max, ex.qtd + n);
+    if (novo === ex.qtd){ toast("Você já pegou todo o estoque deste item"); return; }
+    ex.qtd = novo; ex.max = max;
+  } else {
+    cart.push({key: v.key, grupo: g.chave, id: v.id, modelo: nomeCompleto(g), detalhes: g.detalhes, condicao: g.condicao,
+      bateria: v.bateria, observacao: v.observacao, cor: v.cor, preco: v.preco,
+      qtd: Math.min(max, n), max, foto: g.fotos[0] || ""});
+  }
+  salvarCarrinho(); atualizarCarrinho(); toast("Adicionado ao carrinho");
+}
+function remover(i){ cart.splice(i, 1); salvarCarrinho(); atualizarCarrinho(); }
+function mudarQtd(i, d){
+  const it = cart[i]; if (!it || it.max <= 1) return;
+  it.qtd = Math.max(1, Math.min(it.max, it.qtd + d));
+  salvarCarrinho(); atualizarCarrinho();
+}
+
+let tToast;
+function toast(t, ms){
+  const e = $("toast"); e.textContent = t; e.classList.add("on");
+  clearTimeout(tToast); tToast = setTimeout(() => e.classList.remove("on"), ms || 1800);
+}
+function mostrarAlerta(texto, tipo){
+  const a = $("gAlerta"); a.textContent = texto; a.className = "g-alerta" + (tipo === "aviso" ? " aviso" : ""); a.hidden = false;
+}
+function limparAlerta(){ $("gAlerta").hidden = true; }
+
+const urlFoto = f => !f ? semFoto : (/^(https?:|data:|\/)/.test(f) ? f : CONFIG.pastaMidias + (f.includes("%") ? f : encodeURI(f)));
+const descItem = it => [it.condicao, it.bateria ? `Bateria ${it.bateria}%` : "", it.cor ? `Cor: ${it.cor}` : ""].filter(Boolean).join(" · ");
+const codPedido = p => p && p.codigo ? "#" + String(p.codigo).padStart(4, "0") : "";
+
+function atualizarCarrinho(){
+  const n = qtdTotal(), tot = valorTotal();
+  const c = $("contaCarrinho"); c.textContent = n; c.hidden = !n;
+  $("barraPedido").hidden = !n || $("gaveta").classList.contains("on");
+  $("barraTxt").textContent = `Ver pedido · ${n} ${n === 1 ? "aparelho" : "aparelhos"}`;
+  $("barraTotal").textContent = brl(tot);
+  atualizadores.forEach(f => f());
+  desenharGaveta();
+}
+
+function desenharGaveta(){
+  const box = $("gLista"); box.replaceChildren();
+  if (modo === "pedidos"){
+    $("gTitulo").textContent = "Meus pedidos"; $("gRodape").hidden = true; desenharPedidos(box); return;
+  }
+  if (modo === "ok" && pedidoRecente){
+    $("gTitulo").textContent = "Pedido enviado"; $("gRodape").hidden = true; desenharOk(box); return;
+  }
+  const n = qtdTotal(), tot = valorTotal();
+  $("gTitulo").textContent = n ? `Seu pedido (${n})` : "Seu pedido";
+  if (!cart.length){
+    const v = document.createElement("div"); v.className = "g-vazio";
+    v.textContent = "Seu carrinho está vazio. Adicione aparelhos para montar o pedido.";
+    box.append(v);
+  }
+  cart.forEach((it, i) => {
+    const row = document.createElement("div"); row.className = "linha-item";
+    const img = document.createElement("img"); img.alt = it.modelo; img.src = urlFoto(it.foto);
+    img.onerror = () => { img.onerror = null; img.src = semFoto; };
+    const info = document.createElement("div");
+    const h = document.createElement("h3"); h.textContent = it.modelo + (it.detalhes ? " · " + it.detalhes : "");
+    const sub = document.createElement("p"); sub.className = "sub"; sub.textContent = descItem(it) + (it.id ? ` · Cód. #${it.id}` : "");
+    info.append(h, sub);
+    const baixo = document.createElement("div"); baixo.className = "linha-baixo";
+    if (it.max <= 1){
+      const u = document.createElement("span"); u.className = "unico"; u.textContent = "Peça única · 1 un.";
+      baixo.append(u);
+    } else {
+      const q = document.createElement("div"); q.className = "qtd";
+      const menos = document.createElement("button"); menos.type = "button"; menos.textContent = "−"; menos.setAttribute("aria-label", "Diminuir quantidade");
+      menos.disabled = it.qtd <= 1 || ocupado; menos.onclick = () => mudarQtd(i, -1);
+      const num = document.createElement("span"); num.textContent = it.qtd;
+      const mais = document.createElement("button"); mais.type = "button"; mais.textContent = "+"; mais.setAttribute("aria-label", "Aumentar quantidade");
+      mais.disabled = it.qtd >= it.max || ocupado; mais.onclick = () => mudarQtd(i, 1);
+      q.append(menos, num, mais); baixo.append(q);
+    }
+    const st = document.createElement("span"); st.className = "subtotal"; st.textContent = brl(it.preco * it.qtd);
+    baixo.append(st);
+    const rm = document.createElement("button"); rm.type = "button"; rm.className = "remover";
+    rm.innerHTML = ICONE_LIXO; rm.append("Remover do carrinho");
+    rm.setAttribute("aria-label", "Remover " + it.modelo + " do carrinho");
+    rm.disabled = ocupado; rm.onclick = () => remover(i);
+    info.append(baixo, rm);
+    row.append(img, info); box.append(row);
+  });
+  $("gRodape").hidden = !cart.length;
+  $("gQtd").textContent = `${n} ${n === 1 ? "aparelho" : "aparelhos"}`;
+  $("gTotal").textContent = brl(tot);
+  const falta = CONFIG.pedidoMinimo - tot, nota = $("gNota");
+  nota.hidden = !(CONFIG.pedidoMinimo > 0 && falta > 0);
+  if (!nota.hidden) nota.textContent = `Pedido mínimo: ${brl(CONFIG.pedidoMinimo)}. Faltam ${brl(falta)}.`;
+  $("gDica").hidden = !FB;
+  const fin = $("finalizar");
+  fin.disabled = !cart.length || !nota.hidden || ocupado;
+  fin.innerHTML = ICONE_ZAP; fin.append(ocupado ? "Enviando pedido…" : (FB ? "Enviar pedido" : "Finalizar pedido no WhatsApp"));
+}
+
+/* ----- Confirmação depois de enviar ----- */
+function desenharOk(box){
+  const w = document.createElement("div"); w.className = "ok-box";
+  const ck = document.createElement("div"); ck.className = "ok-check"; ck.textContent = "✓";
+  const h = document.createElement("h3"); h.textContent = pedidoRecente.codigo ? `Pedido ${codPedido(pedidoRecente)} registrado` : "Pedido registrado";
+  const p = document.createElement("p"); p.textContent = "Os aparelhos já estão reservados para você. Falta só enviar o resumo no WhatsApp para a loja confirmar.";
+  const a = document.createElement("a"); a.className = "finalizar"; a.href = pedidoRecente.url; a.target = "_blank"; a.rel = "noopener";
+  a.innerHTML = ICONE_ZAP; a.append("Enviar resumo no WhatsApp");
+  const b1 = document.createElement("button"); b1.type = "button"; b1.className = "btn-sec"; b1.textContent = "Acompanhar meus pedidos";
+  b1.onclick = () => { modo = "pedidos"; desenharGaveta(); };
+  const b2 = document.createElement("button"); b2.type = "button"; b2.className = "btn-sec"; b2.textContent = "Continuar comprando";
+  b2.onclick = fecharGaveta;
+  w.append(ck, h, p, a, b1, b2); box.append(w);
+}
+
+/* ----- Meus pedidos (acompanha o status em tempo real) ----- */
+const STATUS = {novo: ["Aguardando confirmação","novo"], confirmado: ["Confirmado","ok"], concluido: ["Concluído","fim"], cancelado: ["Cancelado","off"]};
+const itensDe = p => Object.values(p.itens || {});
+
+function desenharPedidos(box){
+  const l = meus.map(m => ({m, p: pedidosVivos[m.id]})).filter(x => x.p);
+  if (!l.length){
+    const v = document.createElement("div"); v.className = "g-vazio";
+    v.textContent = "Seus pedidos aparecem aqui depois que você enviar um.";
+    box.append(v); return;
+  }
+  l.forEach(({m, p}) => {
+    const st = STATUS[p.status] || [p.status, ""];
+    const card = document.createElement("div"); card.className = "ped";
+    const topo = document.createElement("div"); topo.className = "ped-topo";
+    const t = document.createElement("strong"); t.textContent = "Pedido " + (codPedido(p) || "");
+    const chip = document.createElement("span"); chip.className = "chip " + st[1]; chip.textContent = st[0];
+    topo.append(t, chip);
+    const data = document.createElement("small");
+    data.textContent = p.criadoEm ? new Date(p.criadoEm).toLocaleString("pt-BR", {dateStyle:"short", timeStyle:"short"}) : "";
+    const ul = document.createElement("ul");
+    itensDe(p).forEach(i => { const li = document.createElement("li"); li.textContent = `${i.qtd}x ${nomeItem(i)}`; ul.append(li); });
+    const tot = document.createElement("div"); tot.className = "tot"; tot.textContent = brl(Number(p.total) || 0);
+    card.append(topo, data, ul, tot);
+    const nota = document.createElement("small");
+    if (p.status === "novo" || p.status === "confirmado"){
+      const msg = encodeURIComponent(`Olá! Sobre o pedido ${codPedido(p)} (${p.cliente}): `);
+      nota.append("Para alterar ou cancelar, fale com a loja: ");
+      const a = document.createElement("a"); a.href = `https://wa.me/${CONFIG.whatsappPedidos || CONFIG.whatsapp}?text=${msg}`;
+      a.target = "_blank"; a.rel = "noopener"; a.textContent = "WhatsApp"; nota.append(a);
+      card.append(nota);
+    } else if (p.status === "cancelado"){
+      nota.textContent = "Pedido cancelado. Os aparelhos voltaram para o estoque."; card.append(nota);
+    }
+    box.append(card);
+  });
+}
+
+function salvarMeus(item){
+  meus = [item, ...meus.filter(m => m.id !== item.id)].slice(0, 10);
+  guardar(LS_MEUS, JSON.stringify(meus));
+  atualizarBotaoPedidos();
+}
+function lerMeus(){
+  try { const j = JSON.parse(ler(LS_MEUS) || "[]"); return Array.isArray(j) ? j.filter(x => x && x.id).slice(0, 10) : []; }
+  catch (e) { return []; }
+}
+function atualizarBotaoPedidos(){ $("abrirPedidos").hidden = !(FB && meus.length); }
+function acompanharPedidos(){
+  unsubs.forEach(u => { try { u(); } catch (e) {} }); unsubs = [];
+  atualizarBotaoPedidos();
+  if (!FB) return;
+  meus.forEach(m => {
+    const u = FB.onValue(FB.ref(FB.db, "pedidos/" + m.id), s => {
+      const p = s.val(); pedidosVivos[m.id] = p;
+      const ant = statusAnt[m.id]; statusAnt[m.id] = p && p.status;
+      if (ant && p && p.status !== ant && STATUS[p.status]) toast(`Pedido ${codPedido(p)}: ${STATUS[p.status][0].toLowerCase()}`, 3500);
+      if (modo === "pedidos") desenharGaveta();
+    }, () => {});
+    unsubs.push(u);
+  });
+}
+
+/* ----- Envio do pedido ----- */
+function mensagemPedido(itens, nome, codigo){
+  const cab = codigo ? `*PEDIDO DE ATACADO #${String(codigo).padStart(4, "0")}*` : "*PEDIDO DE ATACADO*";
+  const linhas = [cab, nome ? `Cliente: ${nome}` : "", ""];
+  itens.forEach((it, i) => {
+    linhas.push(`*${i + 1}. ${it.modelo}*${it.detalhes ? " " + it.detalhes : ""}`);
+    linhas.push(descItem(it) + (it.id ? ` · Cód. #${it.id}` : ""));
+    if (it.observacao) linhas.push(`Obs: ${it.observacao}`);
+    linhas.push(`${it.qtd}x ${brl(it.preco)} = ${brl(it.qtd * it.preco)}`, "");
+  });
+  const q = itens.reduce((n, i) => n + i.qtd, 0), t = itens.reduce((n, i) => n + i.qtd * i.preco, 0);
+  linhas.push(`*Total de aparelhos:* ${q}`, `*Valor total: ${brl(t)}*`, "",
+    codigo ? "Pedido já registrado no sistema. Aguardo a confirmação e o pagamento. Obrigado!" : "Aguardo a confirmação de disponibilidade e o pagamento. Obrigado!");
+  return linhas.filter((l, i, a) => !(l === "" && a[i - 1] === "")).join("\n");
+}
+const urlWhats = (itens, nome, codigo) =>
+  `https://wa.me/${CONFIG.whatsappPedidos || CONFIG.whatsapp}?text=${encodeURIComponent(mensagemPedido(itens, nome, codigo))}`;
+
+const paraItemPedido = i => ({chave: i.key, id: i.id || null, modelo: i.modelo, detalhes: i.detalhes || "", condicao: i.condicao || "",
+  cor: i.cor || "", bateria: i.bateria || null, observacao: i.observacao || "", preco: i.preco, qtd: i.qtd, res: !!i.res});
+const negar = d => { const o = {}; Object.keys(d).forEach(k => o[k] = -d[k]); return o; };
+
+function textoConflito(conflitos, itens){
+  const por = new Map(itens.map(i => [i.key, i]));
+  const linhas = conflitos.map(c => {
+    const nm = nomeItem(por.get(c.chave) || {}) || "Um item";
+    return c.resta > 0 ? `${nm}: você pediu ${c.quer}, mas só restam ${c.resta}.` : `${nm}: indisponível, outro cliente acabou de reservar.`;
+  });
+  return "Item indisponível — " + linhas.join(" ") + " Nenhum aparelho foi reservado ainda. Ajustamos seu carrinho; confira e envie de novo.";
+}
+
+async function finalizar(){
+  if (!cart.length || ocupado) return;
+  const nome = $("cliente").value.trim();
+  if (!nome){ mostrarAlerta("Informe seu nome ou empresa para enviar o pedido.", "aviso"); $("cliente").focus(); return; }
+  limparAlerta();
+
+  if (!FB){                                     // sem Firebase: comportamento antigo (só WhatsApp)
+    const url = urlWhats(cart.map(i => ({...i})), nome, null);
+    const w = window.open(url, "_blank");
+    if (!w) location.href = url;
+    return;
+  }
+  if (!conectado){ mostrarAlerta("Sem conexão com o estoque no momento. Verifique sua internet e tente de novo.", "erro"); return; }
+
+  ocupado = true; atualizarCarrinho();
+  let reservou = false, gravou = false, deltas = {};
+  try {
+    // 1) confere o estoque mais recente; se algo mudou, avisa e deixa o cliente revisar
+    const antes = JSON.stringify(cart.map(i => [i.key, i.qtd, i.preco]));
+    await recarregarLista();
+    aplicarDisp(true);
+    const msgsFinal = conferirCarrinho();
+    if (msgsFinal.length || JSON.stringify(cart.map(i => [i.key, i.qtd, i.preco])) !== antes){
+      mostrarAlerta("O estoque mudou enquanto você montava o pedido. Ajustamos o carrinho; confira e envie de novo.", "aviso");
+      atualizarCarrinho(); return;
+    }
+
+    // 2) reserva atômica: o primeiro a chegar leva, o segundo recebe o alerta
+    const itens = cart.map(i => ({...i})), vs = mapaVariantes(), limites = {};
+    itens.forEach(i => {
+      const v = vs.get(i.key); i.res = !!(v && v.estoque !== null);
+      if (i.res){ deltas[i.key] = (deltas[i.key] || 0) + i.qtd; limites[i.key] = v.estoque; }
+    });
+    enviando = true;
+    if (Object.keys(deltas).length){
+      let conflitos = [];
+      const res = await FB.runTransaction(FB.ref(FB.db, "reservas"), cur => {
+        const r = aplicarDeltas(cur, deltas, limites);
+        conflitos = r.conflitos;
+        return r.conflitos.length ? undefined : r.novo;
+      });
+      if (!res.committed){
+        reservas = res.snapshot.val() || {};
+        enviando = false; aplicarDisp(true);
+        mostrarAlerta(textoConflito(conflitos, itens), "erro");
+        toast("Item indisponível", 3000);
+        return;
+      }
+      reservou = true;
+    }
+
+    // 3) registra o pedido (a página de pedidos da loja enxerga na hora)
+    const refPed = FB.push(FB.ref(FB.db, "pedidos")), id = refPed.key;
+    let codigo = null;
+    try {
+      const c = await FB.runTransaction(FB.ref(FB.db, "contador"), n => (Number(n) || 0) + 1);
+      if (c.committed) codigo = c.snapshot.val();
+    } catch (e) { /* sem número: o pedido segue só com o identificador */ }
+    const dados = JSON.parse(JSON.stringify({
+      codigo, cliente: nome, status: "novo",
+      qtdTotal: itens.reduce((n, i) => n + i.qtd, 0),
+      total: itens.reduce((n, i) => n + i.qtd * i.preco, 0),
+      itens: itens.map(paraItemPedido)
+    }));
+    dados.criadoEm = FB.serverTimestamp();
+    try { await FB.set(refPed, dados); gravou = true; }
+    catch (e) {
+      try { gravou = (await FB.get(refPed)).exists(); } catch (e2) { gravou = false; }   // talvez tenha gravado e só a resposta se perdeu
+      if (!gravou) throw e;
+    }
+
+    // 4) deu certo
+    salvarMeus({id, codigo, t: Date.now()});
+    cart = []; salvarCarrinho();
+    const url = urlWhats(itens, nome, codigo);
+    pedidoRecente = {id, codigo, url, nome};
+    modo = "ok"; enviando = false;
+    acompanharPedidos();
+    try { window.open(url, "_blank"); } catch (e) {}      // se o navegador bloquear, o botão da confirmação abre
+  } catch (e) {
+    console.error(e);
+    if (reservou && !gravou){
+      try { await FB.runTransaction(FB.ref(FB.db, "reservas"), cur => aplicarDeltas(cur, negar(deltas)).novo); } catch (e2) {}
+    }
+    enviando = false;
+    mostrarAlerta("Não conseguimos registrar o pedido agora. Nada foi reservado; tente novamente em instantes.", "erro");
+  } finally {
+    ocupado = false; enviando = false; atualizarCarrinho();
+  }
+}
+
+let focoAntes = null;
+function abrirGaveta(m){
+  focoAntes = document.activeElement;
+  modo = m || "carrinho";
+  $("gaveta").classList.add("on"); $("veu").classList.add("on");
+  $("gaveta").setAttribute("aria-hidden", "false");
+  $("barraPedido").hidden = true;
+  document.body.style.overflow = "hidden";
+  desenharGaveta();
+  $("fecharCarrinho").focus();
+}
+function fecharGaveta(){
+  $("gaveta").classList.remove("on"); $("veu").classList.remove("on");
+  $("gaveta").setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+  modo = "carrinho"; pedidoRecente = null; limparAlerta();
+  atualizarCarrinho();
+  if (focoAntes && focoAntes.focus) focoAntes.focus();
+}
+
+/* ============ VITRINE ============ */
+// Acha onde o aparelho está dentro da foto (ignora o fundo branco/transparente) e
+// ajusta o zoom e a posição para todos os aparelhos ocuparem o mesmo espaço do quadrado.
+function ajustarFoto(img){
+  try {
+    if (img.src.startsWith("data:")) return;
+    const w = img.naturalWidth, h = img.naturalHeight; if (!w || !h) return;
+    const s = 200 / Math.max(w, h), cw = Math.max(1, Math.round(w * s)), ch = Math.max(1, Math.round(h * s));
+    const c = document.createElement("canvas"); c.width = cw; c.height = ch;
+    const ctx = c.getContext("2d", {willReadFrequently: true});
+    ctx.drawImage(img, 0, 0, cw, ch);
+    const d = ctx.getImageData(0, 0, cw, ch).data;
+    const col = new Uint16Array(cw), lin = new Uint16Array(ch);
+    for (let j = 0; j < ch; j++) for (let i = 0; i < cw; i++){
+      const k = (j * cw + i) * 4;
+      if (d[k + 3] > 20 && (d[k] < 238 || d[k + 1] < 238 || d[k + 2] < 238)){ col[i]++; lin[j]++; }
+    }
+    const primeiro = a => a.findIndex(v => v >= 2);
+    const ultimo = a => { for (let i = a.length - 1; i >= 0; i--) if (a[i] >= 2) return i; return -1; };
+    const x0 = primeiro(col), x1 = ultimo(col), y0 = primeiro(lin), y1 = ultimo(lin);
+    if (x0 < 0 || y0 < 0 || x1 <= x0 || y1 <= y0) return;
+    const bx = x0 / cw, by = y0 / ch, bw = (x1 + 1 - x0) / cw, bh = (y1 + 1 - y0) / ch;
+    if (bw < 0.1 || bh < 0.1) return;
+    const a = w / h, T = 0.88;                                    // aparelho ocupa 88% do quadrado
+    const W = T / Math.max(bw, bh / a), H = W / a;
+    img.style.width = (W * 100) + "%"; img.style.height = (H * 100) + "%";
+    img.style.left = ((0.5 - (bx + bw / 2) * W) * 100) + "%";
+    img.style.top = ((0.5 - (by + bh / 2) * H) * 100) + "%";
+    img.classList.add("ajustada");
+  } catch (e) { /* foto local (file://) ou sem permissão: fica como está */ }
+}
+
+function carrossel(g){
+  const wrap = document.createElement("div"); wrap.className = "foto";
+  const trilho = document.createElement("div"); trilho.className = "trilho";
+  const fotos = g.fotos.length ? g.fotos : [""];
+  fotos.forEach(f => {
+    const slide = document.createElement("div"); slide.className = "slide";
+    const img = document.createElement("img");
+    img.loading = "lazy"; img.alt = nomeCompleto(g);
+    img.crossOrigin = "anonymous";                       // permite medir a foto; se o servidor não deixar, tenta sem
+    img.onload = () => ajustarFoto(img);
+    img.onerror = () => {
+      if (img.crossOrigin){ img.removeAttribute("crossorigin"); img.src = urlFoto(f); }
+      else { img.onerror = null; img.src = semFoto; }
+    };
+    img.src = urlFoto(f);
+    slide.append(img); trilho.append(slide);
+  });
+  wrap.append(trilho);
+  if (fotos.length > 1){
+    const mk = (cls, txt, rotulo, dir) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "seta " + cls; b.textContent = txt; b.setAttribute("aria-label", rotulo);
+      b.onclick = () => trilho.scrollBy({left: dir * trilho.clientWidth, behavior: "smooth"});
+      return b;
+    };
+    const pontos = document.createElement("div"); pontos.className = "pontos";
+    fotos.forEach(() => pontos.append(document.createElement("i")));
+    const marcar = () => {
+      const i = Math.round(trilho.scrollLeft / trilho.clientWidth);
+      [...pontos.children].forEach((d, k) => d.classList.toggle("on", k === i));
+    };
+    trilho.addEventListener("scroll", marcar, {passive: true}); marcar();
+    wrap.append(mk("ant", "‹", "Foto anterior", -1), mk("prox", "›", "Próxima foto", 1), pontos);
+  }
+  return wrap;
+}
+
+function linhaVariante(g, v){
+  const row = document.createElement("div"); row.className = "var";
+  const topo = document.createElement("div"); topo.className = "var-topo";
+  if (v.cor){
+    const dot = document.createElement("span"); dot.className = "dot";
+    dot.style.background = MAPA_CORES[v.cor.toLowerCase()] || "#b8bcc6"; topo.append(dot);
+  }
+  const nome = document.createElement("span"); nome.className = "var-nome"; nome.textContent = v.cor || "Padrão"; topo.append(nome);
+  if (v.bateria){
+    const b = document.createElement("span"); b.className = "tag bat" + (v.bateria < 85 ? " baixa" : "");
+    b.innerHTML = ICONE_BAT; b.append(`${v.bateria}%`); topo.append(b);
+  }
+  const disp = document.createElement("span"); disp.className = "disp"; topo.append(disp);
+  if (g.precoMin !== g.precoMax){
+    const pr = document.createElement("span"); pr.className = "var-preco"; pr.textContent = brl(v.preco); topo.append(pr);
+  }
+  row.append(topo);
+  if (v.observacao){ const o = document.createElement("p"); o.className = "obs"; o.textContent = "Obs: " + v.observacao; o.title = v.observacao; row.append(o); }
+
+  const ctl = document.createElement("div"); ctl.className = "var-ctl";
+  let sel = 1;
+  const q = document.createElement("div"); q.className = "qtd";
+  const menos = document.createElement("button"); menos.type = "button"; menos.textContent = "−"; menos.setAttribute("aria-label", "Diminuir quantidade");
+  const num = document.createElement("span");
+  const mais = document.createElement("button"); mais.type = "button"; mais.textContent = "+"; mais.setAttribute("aria-label", "Aumentar quantidade");
+  q.append(menos, num, mais);
+  const btn = document.createElement("button"); btn.type = "button"; btn.className = "add-btn";
+  menos.onclick = () => { sel = Math.max(1, sel - 1); atualizar(); };
+  mais.onclick = () => { sel++; atualizar(); };
+  btn.onclick = () => { adicionar(g, v, sel); sel = 1; };
+  ctl.append(q, btn); row.append(ctl);
+
+  function atualizar(){
+    const ex = achaNoCarrinho(v.key), mx = maxDe(v), restante = mx - (ex ? ex.qtd : 0);
+    disp.textContent = v.estoque === null ? "" : (v.disp === 0 ? "Esgotado" : `${v.disp} un.`);
+    row.classList.toggle("off", mx <= 0);
+    sel = Math.max(1, Math.min(sel, restante));
+    num.textContent = sel; menos.disabled = sel <= 1; mais.disabled = sel >= restante;
+    q.hidden = mx <= 1;
+    btn.disabled = restante <= 0;
+    btn.innerHTML = ICONE_CARRINHO;
+    btn.append(mx <= 0 ? "Esgotado" : (restante <= 0 ? "No carrinho ✓" : (ex ? `Adicionar mais (${ex.qtd} no pedido)` : "Adicionar")));
+  }
+  atualizadores.push(atualizar); atualizar();
+  return row;
+}
+
+function cartao(g){
+  const art = document.createElement("article"); art.className = "item";
+  const foto = carrossel(g);
+  const badge = document.createElement("span"); badge.className = "noCarrinho"; badge.hidden = true; foto.append(badge);
+  const esg = document.createElement("span"); esg.className = "esgotado"; esg.textContent = "Esgotado"; esg.hidden = true; foto.append(esg);
+
+  const cab = document.createElement("div"); cab.className = "cab";
+  const info = document.createElement("div"); info.className = "cab-info";
+  if (g.marca){ const m = document.createElement("p"); m.className = "marca"; m.textContent = g.marca; info.append(m); }
+  const h = document.createElement("h2"); h.className = "modelo"; h.textContent = g.modelo; info.append(h);
+  if (g.detalhes){ const d = document.createElement("p"); d.className = "detalhes"; d.textContent = g.detalhes; info.append(d); }
+  const tags = document.createElement("div"); tags.className = "tags";
+  if (g.condicao){ const s = document.createElement("span"); s.className = "tag"; s.textContent = g.condicao; tags.append(s); }
+  const finito = g.variantes.every(v => v.estoque !== null);
+  let tagEst = null;
+  if (finito){ tagEst = document.createElement("span"); tagEst.className = "tag"; tags.append(tagEst); }
+  if (tags.children.length) info.append(tags);
+
+  atualizadores.push(() => {
+    const n = cart.filter(i => i.grupo === g.chave).reduce((s, i) => s + i.qtd, 0);
+    badge.hidden = !n; badge.textContent = n ? `${n} no pedido` : "";
+    if (finito){
+      const total = g.variantes.reduce((s, v) => s + (v.disp || 0), 0);
+      tagEst.textContent = total > 0 ? `${total} em estoque` : "Esgotado";
+      esg.hidden = total > 0;
+    }
+  });
+
+  const pb = document.createElement("div"); pb.className = "preco-bloco";
+  const lb = document.createElement("div"); lb.className = "rotulo";
+  lb.textContent = g.precoMin === g.precoMax ? "Preço atacado" : "A partir de";
+  const v = document.createElement("div"); v.className = "valor"; v.textContent = brl(g.precoMin);
+  pb.append(lb, v); info.append(pb);
+  cab.append(foto, info);
+
+  const vb = document.createElement("div"); vb.className = "vars-box";
+  const rot = document.createElement("div"); rot.className = "rotulo";
+  const temBat = g.variantes.some(x => x.bateria);
+  rot.textContent = g.variantes.length > 1 ? (temBat ? "Escolha cor e bateria" : "Escolha a cor") : "Disponível";
+  const lst = document.createElement("div"); lst.className = "vars";
+  g.variantes.forEach(x => lst.append(linhaVariante(g, x)));
+  vb.append(rot, lst);
+  art.append(cab, vb);
+  return art;
+}
+
+function desenhar(){
+  const termo = $("busca").value.trim().toLowerCase();
+  const grade = $("grade"); grade.replaceChildren(); atualizadores = [];
+  const itens = grupos.filter(g =>
+    (abaAtiva === "Todos os produtos" || g.grupo === abaAtiva) &&
+    (!termo || (nomeCompleto(g) + " " + g.detalhes).toLowerCase().includes(termo)));
+  const o = $("ordem").value;
+  if (o === "menor") itens.sort((a, b) => a.precoMin - b.precoMin);
+  if (o === "maior") itens.sort((a, b) => b.precoMin - a.precoMin);
+  $("contagemTxt").textContent = itens.length ? `${itens.length} ${itens.length === 1 ? "modelo" : "modelos"}` : "";
+  if (!itens.length){
+    const e = document.createElement("div"); e.className = "vazio";
+    e.textContent = produtos.length ? "Nenhum aparelho encontrado. Tente outra busca." : "Lista indisponível no momento. Chame a gente no WhatsApp.";
+    grade.append(e); return;
+  }
+  itens.forEach(g => grade.append(cartao(g)));
+  atualizadores.forEach(f => f());
+}
+
+function desenharAbas(){
+  const ordem = ["iPhone Seminovos", "Android Novos", "Android Seminovos"];
+  const nomes = [...new Set(grupos.map(g => g.grupo).filter(Boolean))]
+    .sort((a, b) => (ordem.indexOf(a) + 1 || 99) - (ordem.indexOf(b) + 1 || 99));
+  const nav = $("abas"); nav.replaceChildren();
+  ["Todos os produtos", ...nomes].forEach(m => {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = m; b.setAttribute("aria-pressed", m === abaAtiva);
+    b.onclick = () => { abaAtiva = m; desenharAbas(); desenhar(); };
+    nav.append(b);
+  });
+}
+
+function montarCabecalho(){
+  $("nomeLoja").textContent = CONFIG.loja;
+  document.title = CONFIG.loja + " · Atacado";
+  $("slogan").textContent = CONFIG.slogan;
+  $("contato").textContent = [CONFIG.instagram, CONFIG.cidade].filter(Boolean).join(" · ");
+  $("contato").hidden = !$("contato").textContent;
+  const logo = $("logo"); logo.textContent = (CONFIG.loja[0] || "L").toUpperCase();
+  if (CONFIG.logo){
+    const img = new Image(); img.alt = CONFIG.loja;
+    img.onload = () => logo.replaceChildren(img);
+    img.src = urlFoto(CONFIG.logo);
+  }
+  const selos = $("selos");
+  CONFIG.selos.forEach(t => { const s = document.createElement("span"); s.textContent = t; selos.append(s); });
+  if (CONFIG.pedidoMinimo > 0){ const s = document.createElement("span"); s.textContent = `Pedido mínimo ${brl(CONFIG.pedidoMinimo)}`; selos.append(s); }
+}
+
+/* ============ ATUALIZAÇÃO AUTOMÁTICA ============ */
+// Confere o produtos.json de tempos em tempos. Só redesenha a vitrine se o arquivo realmente mudou.
+// (As reservas dos outros clientes chegam sozinhas, em tempo real, pelo Firebase.)
+async function recarregarLista(){
+  if (!CONFIG.listaUrl || enviando) return false;
+  let texto, novos;
+  try { texto = await buscarTexto(); } catch (e) { return false; }
+  if (texto === ultimoTexto) return false;
+  try { novos = lerLista(texto); } catch (e) { return false; }     // arquivo em edição/inválido: ignora e tenta depois
+  ultimoTexto = texto; produtos = novos;
+  grupos = agrupar(produtos);
+  const msgs = enviando ? [] : conferirCarrinho();
+  if (abaAtiva !== "Todos os produtos" && !grupos.some(g => g.grupo === abaAtiva)) abaAtiva = "Todos os produtos";
+  desenharAbas(); desenhar(); atualizarCarrinho();
+  if (msgs.length) avisarCarrinho(msgs);
+  return true;
+}
+
+/* ============ INICIAR ============ */
+(async function(){
+  montarCabecalho();
+  cart = lerCarrinho(); meus = lerMeus();
+  $("cliente").value = ler(LS_CLIENTE) || "";
+  $("busca").addEventListener("input", desenhar);
+  $("ordem").addEventListener("change", desenhar);
+  $("abrirCarrinho").onclick = () => abrirGaveta("carrinho");
+  $("barraPedido").onclick = () => abrirGaveta("carrinho");
+  $("abrirPedidos").onclick = () => abrirGaveta("pedidos");
+  $("fecharCarrinho").onclick = fecharGaveta;
+  $("veu").onclick = fecharGaveta;
+  $("finalizar").onclick = finalizar;
+  $("limpar").onclick = () => { if (confirm("Esvaziar o carrinho?")) { cart = []; salvarCarrinho(); atualizarCarrinho(); } };
+  $("cliente").addEventListener("input", e => guardar(LS_CLIENTE, e.target.value));
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && $("gaveta").classList.contains("on")) fecharGaveta(); });
+  if (CONFIG.sistemaUrl){
+    $("sistemaTitulo").textContent = CONFIG.sistemaTitulo;
+    $("sistemaFrame").src = CONFIG.sistemaUrl;
+    $("sistemaBox").hidden = false;
+  }
+
+  const [lista, fb] = await Promise.all([
+    carregar().catch(e => { console.error("Falha ao carregar a lista:", e); return []; }),
+    iniciarFirebase().catch(e => { console.error("Firebase indisponível:", e); return null; })
+  ]);
+  produtos = lista; FB = fb;
+  if (FB) await ligarReservas();
+  marcarVivo();
+
+  grupos = agrupar(produtos);
+  const msgs = produtos.length ? conferirCarrinho() : [];
+  desenharAbas(); desenhar(); atualizarCarrinho();
+  if (msgs.length) avisarCarrinho(msgs);
+  acompanharPedidos();
+
+  if (CONFIG.listaUrl){
+    setInterval(() => { if (!document.hidden) recarregarLista(); }, CONFIG.atualizarListaMs);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) recarregarLista(); });
+  }
+})();
+</script>
+</body>
+</html>

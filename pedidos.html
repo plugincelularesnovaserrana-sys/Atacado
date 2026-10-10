@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Plugin Celulares · Pedidos do atacado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel:#F4F4F6; --card:#FFFFFF; --tinta:#16181D; --tinta-2:#5E6470; --linha:#E3E5EA;
+    --azul:#1B3FE0; --zap:#17A34A; --zap-hover:#128A3D; --erro:#C8332F; --ok-bg:#E6F6EC; --erro-bg:#FCEBEA; --foto-bg:#F0F1F4;
+    --aviso-bg:#FFF4DB; --aviso:#6B4A00;
+    --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+    --texto:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --papel:#0E1015; --card:#171A21; --tinta:#EEF0F4; --tinta-2:#9AA0AD; --linha:#262A33;
+           --azul:#8AA2FF; --ok-bg:#12281B; --erro-bg:#321816; --foto-bg:#1F232C; --aviso-bg:#33260B; --aviso:#F2C26B; --erro:#FF7B76; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--texto);line-height:1.4}
+  :focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+  main{max-width:860px;margin:0 auto;padding:16px 16px 90px;display:grid;gap:14px}
+  h1{font-family:var(--display);font-weight:800;font-size:1.7rem;letter-spacing:-.02em;margin:6px 0 0}
+  h2{font-family:var(--display);font-weight:700;font-size:1.2rem;margin:0 0 12px}
+  .sub{margin:0;color:var(--tinta-2);font-size:.9rem}
+  .topo{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .topo-dir{display:flex;align-items:center;gap:10px;padding-top:8px}
+  section,details.painel{background:var(--card);border:1px solid var(--linha);border-radius:16px;padding:16px}
+  details.painel>summary{font-family:var(--display);font-weight:700;font-size:1.05rem;cursor:pointer}
+  details.painel[open]>summary{margin-bottom:12px}
+  label{display:block;font-weight:600;font-size:.88rem;margin:12px 0 4px}
+  .dica{font-weight:400;color:var(--tinta-2)}
+  input[type=text],input[type=password],input[type=email],input[type=search]{width:100%;padding:12px 14px;border:1px solid var(--linha);border-radius:10px;background:var(--papel);color:var(--tinta);font:inherit;font-size:16px}
+  .check{display:flex;gap:8px;align-items:center;font-weight:600;margin-top:12px}
+  .check input{width:20px;height:20px}
+  button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 16px;cursor:pointer}
+  button:disabled{opacity:.5;cursor:default}
+  .sec{background:var(--foto-bg);color:var(--tinta);border:1px solid var(--linha)}
+  .pri{background:var(--azul);color:#fff}
+  .ok{background:var(--zap);color:#fff}
+  .ok:hover:not(:disabled){background:var(--zap-hover)}
+  .perigo{background:var(--erro-bg);color:var(--erro);border:1px solid var(--erro)}
+  .mini{padding:8px 12px;font-size:.85rem}
+
+  .vivo{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--tinta-2)}
+  .vivo::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--zap);box-shadow:0 0 0 3px rgba(23,163,74,.22)}
+  .vivo.off::before{background:#C98A1B;box-shadow:0 0 0 3px rgba(201,138,27,.22)}
+  .vivo[hidden]{display:none}
+
+  .resumo{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media (max-width:560px){.resumo{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:12px}
+  .stat b{display:block;font-family:var(--display);font-size:1.4rem;line-height:1.1}
+  .stat span{font-size:.75rem;color:var(--tinta-2);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+  .banner{border:1px solid #E0A526;background:var(--aviso-bg);color:var(--aviso);border-radius:14px;padding:12px 14px;font-size:.88rem;display:grid;gap:8px}
+  .banner[hidden]{display:none}
+
+  .filtros{display:grid;gap:10px}
+  .abas{display:flex;gap:8px;overflow-x:auto}
+  .abas button{flex:none;border:1px solid var(--linha);background:var(--card);color:var(--tinta);padding:8px 14px;border-radius:999px}
+  .abas button[aria-pressed="true"]{background:var(--azul);color:#fff;border-color:var(--azul)}
+
+  .ped{background:var(--card);border:1px solid var(--linha);border-radius:16px;overflow:hidden}
+  .ped.novo{border-color:#E0A526}
+  .ped-cab{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:14px;cursor:pointer;align-items:center}
+  .ped-cab b{font-family:var(--display);font-size:1.1rem}
+  .ped-cab .cli{font-weight:600}
+  .ped-cab small{color:var(--tinta-2)}
+  .ped-cab .tot{font-family:var(--display);font-weight:800;color:var(--azul);font-size:1.15rem;text-align:right}
+  .chip{font-size:.72rem;font-weight:700;border-radius:999px;padding:3px 10px;margin-left:8px;vertical-align:middle;background:var(--foto-bg)}
+  .chip.novo{background:#FFF1D6;color:#8A5A00}.chip.confirmado{background:#E6F6EC;color:#0F6B33}
+  .chip.concluido{background:#E3E9FF;color:#1B3FE0}.chip.cancelado{background:#FCEBEA;color:#8F1F1B}
+  @media (prefers-color-scheme:dark){
+    .chip.novo{background:#33260B;color:#F2C26B}.chip.confirmado{background:#12281B;color:#7BE0A1}
+    .chip.concluido{background:#1B2547;color:#8AA2FF}.chip.cancelado{background:#321816;color:#FFB4B0}
+  }
+  .ped-corpo{border-top:1px solid var(--linha);padding:12px 14px 14px;display:grid;gap:10px}
+  .it{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;border-bottom:1px dashed var(--linha)}
+  .it:last-of-type{border-bottom:0}
+  .it-info small{display:block;color:var(--tinta-2);font-size:.78rem}
+  .it-dir{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .qtd{display:inline-flex;align-items:center;border:1px solid var(--linha);border-radius:10px;overflow:hidden}
+  .qtd button{width:34px;height:34px;padding:0;border-radius:0;background:var(--foto-bg);color:var(--tinta);font-size:1.1rem}
+  .qtd span{min-width:34px;text-align:center;font-weight:700}
+  .q{font-weight:700}
+  .sub-it{font-weight:800;min-width:92px;text-align:right}
+  .acoes{display:flex;gap:8px;flex-wrap:wrap}
+  .log{margin:0;padding:0;list-style:none;font-size:.78rem;color:var(--tinta-2);display:grid;gap:2px}
+  .vazio{color:var(--tinta-2);text-align:center;padding:36px 12px}
+
+  #status{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:10;width:min(560px,calc(100% - 24px));border-radius:12px;padding:12px 14px;font-weight:600;border:1px solid var(--linha);background:var(--card);box-shadow:0 8px 24px rgba(0,0,0,.2);display:none}
+  #status.ok{display:block;background:var(--ok-bg);border-color:var(--zap)}
+  #status.erro{display:block;background:var(--erro-bg);border-color:var(--erro)}
+  #status.info{display:block}
+</style>
+</head>
+<body>
+<main>
+  <div class="topo">
+    <div>
+      <h1>Pedidos do atacado</h1>
+      <p class="sub">Plugin Celulares · atualiza sozinho, sem precisar recarregar</p>
+    </div>
+    <div class="topo-dir">
+      <span class="vivo" id="vivo" hidden></span>
+      <button type="button" class="sec mini" id="sair" hidden>Sair</button>
+    </div>
+  </div>
+
+  <!-- Login -->
+  <section id="login" hidden>
+    <h2>Entrar</h2>
+    <p class="sub">Acesso só da loja. Use o e-mail e a senha criados no Firebase.</p>
+    <form id="formLogin">
+      <label for="lEmail">E-mail</label>
+      <input type="email" id="lEmail" autocomplete="username" required>
+      <label for="lSenha">Senha</label>
+      <input type="password" id="lSenha" autocomplete="current-password" required>
+      <div class="acoes" style="margin-top:16px"><button type="submit" class="pri" id="btnEntrar">Entrar</button></div>
+    </form>
+  </section>
+
+  <div id="painel" hidden style="display:none;gap:14px">
+    <details class="painel" id="painelGh">
+      <summary>Estoque no GitHub (necessário para concluir pedidos)</summary>
+      <p class="sub">Ao concluir um pedido, a página baixa a quantidade no <code id="ghArq">produtos.json</code> sozinha. Isso precisa do mesmo token usado no admin (Contents: leitura e escrita, só no repositório do atacado).</p>
+      <label for="ghToken">Token do GitHub</label>
+      <input type="password" id="ghToken" autocomplete="off" placeholder="github_pat_...">
+      <label class="check"><input type="checkbox" id="ghLembrar"> Lembrar token neste aparelho</label>
+      <div class="acoes" style="margin-top:12px"><button type="button" class="pri mini" id="ghSalvar">Salvar token</button></div>
+    </details>
+
+    <div class="resumo" id="resumo"></div>
+    <div class="banner" id="banner" hidden></div>
+
+    <div class="filtros">
+      <div class="abas" id="abas"></div>
+      <input type="search" id="busca" placeholder="Buscar por cliente, número ou modelo..." aria-label="Buscar pedidos">
+    </div>
+    <div id="lista"></div>
+  </div>
+
+  <div id="status" role="status" aria-live="polite"></div>
+</main>
+
+<script>
+/* ============ ESTADO ============ */
+const $ = id => document.getElementById(id);
+const FB_VERSAO = "10.12.2";
+const LS_GH = "atacado-pedidos-gh";
+const GH_PADRAO = {owner: "plugincelularesnovaserrana-sys", repo: "Atacado", branch: "main", path: "produtos.json"};
+let CFG = null, FB = null, AUTH = null;
+let pedidos = [], reservasAtuais = {}, ocupado = false, aba = "abertos";
+let expandidos = new Set(), conhecidos = null, pendentes = 0, tVerif = null, unsubs = [];
+let ghToken = "";
+
+/* ============ UTILITÁRIOS ============ */
+const brl = n => Number(n || 0).toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
+const esperar = ms => new Promise(r => setTimeout(r, ms));
+const enc = p => p.split("/").map(encodeURIComponent).join("/");
+const fmtData = t => t ? new Date(t).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"}) : "—";
+const codPedido = p => p.codigo ? "#" + String(p.codigo).padStart(4, "0") : "";
+const itensDe = p => Object.values(p.itens || {});
+const nomeItem = i => [i.modelo, i.detalhes, i.cor].filter(Boolean).join(" ");
+const aberto = p => p.status === "novo" || p.status === "confirmado";
+const ROTULO = {novo: "Novo", confirmado: "Confirmado", concluido: "Concluído", cancelado: "Cancelado"};
+const utf8ParaB64 = txt => { const b = new TextEncoder().encode(txt); let s = ""; b.forEach(x => s += String.fromCharCode(x)); return btoa(s); };
+const b64ParaUtf8 = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, "")), ch => ch.charCodeAt(0)));
+
+function el(tag, cls, txt){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (txt !== undefined) e.textContent = txt;
+  return e;
+}
+function aviso(tipo, texto){
+  const s = $("status"); s.className = tipo; s.textContent = texto;
+  clearTimeout(aviso.t);
+  if (tipo === "ok") aviso.t = setTimeout(() => { if (s.className === "ok") s.className = ""; }, 7000);
+}
+function msgErro(e){
+  if (e && e.status === 401) return "Token do GitHub inválido ou expirado.";
+  if (e && e.status === 403) return "O token do GitHub não tem permissão de escrita neste repositório.";
+  if (e && e.status === 404) return "Arquivo ou repositório não encontrado no GitHub.";
+  const m = String((e && (e.code || e.message)) || e || "");
+  if (/permission[_ -]?denied/i.test(m)) return "Sem permissão no Firebase. Confira as regras e se você está logado.";
+  return m || "Falha inesperada.";
+}
+
+/* ============ RESERVAS (mesma regra do site) ============ */
+function aplicarDeltas(atual, deltas, limites){
+  const novo = Object.assign({}, atual || {}), conflitos = [];
+  Object.keys(deltas).forEach(k => {
+    const a = Number(novo[k]) || 0, d = deltas[k], lim = limites ? limites[k] : undefined;
+    if (d > 0 && lim !== undefined && a + d > lim){
+      conflitos.push({chave: k, quer: d, resta: Math.max(0, lim - a)});
+      return;
+    }
+    const nv = Math.max(0, a + d);
+    if (nv > 0) novo[k] = nv; else delete novo[k];
+  });
+  return {novo, conflitos};
+}
+async function reservar(deltas, limites){
+  let conflitos = [];
+  const res = await FB.runTransaction(FB.ref(FB.db, "reservas"), cur => {
+    const r = aplicarDeltas(cur, deltas, limites);
+    conflitos = r.conflitos;
+    return r.conflitos.length ? undefined : r.novo;
+  });
+  return {committed: res.committed, conflitos};
+}
+const negar = d => { const o = {}; Object.keys(d).forEach(k => o[k] = -d[k]); return o; };
+function deltasDe(itens, sinal){
+  const d = {};
+  itens.filter(i => i.res).forEach(i => { d[i.chave] = (d[i.chave] || 0) + sinal * (Number(i.qtd) || 0); });
+  return d;
+}
+
+/* ============ GITHUB (estoque físico no produtos.json) ============ */
+const gh = () => Object.assign({}, GH_PADRAO, (CFG && CFG.github) || {});
+const ghUrl = g => `https://api.github.com/repos/${g.owner}/${g.repo}/contents/${enc(g.path)}`;
+function ghHeaders(){
+  return {"Authorization": "Bearer " + ghToken, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"};
+}
+async function ghGet(){
+  const g = gh();
+  const r = await fetch(ghUrl(g) + "?ref=" + encodeURIComponent(g.branch), {headers: ghHeaders(), cache: "no-store"});
+  let d = null; try { d = await r.json(); } catch (e) {}
+  if (!r.ok){ const e = new Error((d && d.message) || ("Erro " + r.status)); e.status = r.status; throw e; }
+  return {sha: d.sha, json: JSON.parse(b64ParaUtf8(d.content || ""))};
+}
+async function ghPut(json, sha, msg){
+  const g = gh();
+  const r = await fetch(ghUrl(g), {
+    method: "PUT", headers: Object.assign({"Content-Type": "application/json"}, ghHeaders()),
+    body: JSON.stringify({message: msg, content: utf8ParaB64(JSON.stringify(json, null, 2) + "\n"), branch: g.branch, sha}), cache: "no-store"
+  });
+  let d = null; try { d = await r.json(); } catch (e) {}
+  if (!r.ok){ const e = new Error((d && d.message) || ("Erro " + r.status)); e.status = r.status; throw e; }
+}
+const listaDe = j => Array.isArray(j) ? j : (j.produtos || j.items || []);
+
+// Lista atual de aparelhos. Com token usa a API do GitHub (sempre atualizada); sem token usa o endereço público.
+async function lerProdutosFresco(){
+  if (ghToken) return listaDe((await ghGet()).json);
+  const g = gh();
+  const r = await fetch(`https://raw.githubusercontent.com/${g.owner}/${g.repo}/${g.branch}/${g.path}?v=${Date.now()}`, {cache: "no-store"});
+  if (!r.ok) throw new Error("Não consegui ler o produtos.json (HTTP " + r.status + ").");
+  return listaDe(await r.json());
+}
+const qtdFisica = rec => {
+  if (rec.qtd !== undefined && rec.qtd !== null && rec.qtd !== ""){ const n = parseInt(rec.qtd, 10); return isNaN(n) ? null : n; }
+  return rec.condicao === "Seminovo" ? 1 : null;
+};
+// Estoque físico de cada item do pedido (para conferir se dá para aumentar/reabrir)
+async function limitesDe(itens){
+  const lista = await lerProdutosFresco(), limites = {};
+  for (const it of itens.filter(i => i.res)){
+    const rec = lista.find(p => String(p.id) === String(it.id));
+    const q = rec ? qtdFisica(rec) : null;
+    if (q === null) throw new Error(`"${nomeItem(it)}" não está mais no produtos.json com estoque informado.`);
+    limites[it.chave] = q;
+  }
+  return limites;
+}
+// sinal -1: baixa o estoque (pedido concluído); +1: devolve (concluído que foi cancelado)
+async function ghAjustarEstoque(itens, sinal, motivo){
+  if (!ghToken) throw new Error("Informe o token do GitHub em \"Estoque no GitHub\" para mexer no estoque.");
+  for (let t = 0; t < 4; t++){
+    const d = await ghGet(), lista = listaDe(d.json), avisos = [];
+    itens.filter(i => i.res).forEach(it => {
+      const rec = lista.find(p => String(p.id) === String(it.id));
+      if (!rec || qtdFisica(rec) === null){ avisos.push(nomeItem(it)); return; }
+      rec.qtd = Math.max(0, qtdFisica(rec) + sinal * (Number(it.qtd) || 0));
+    });
+    try { await ghPut(d.json, d.sha, motivo); return avisos; }
+    catch (e) { if ((e.status === 409 || e.status === 422) && t < 3){ await esperar(500); continue; } throw e; }
+  }
+  return [];
+}
+
+/* ============ AÇÕES NOS PEDIDOS ============ */
+async function executar(fn){
+  if (ocupado) return;
+  ocupado = true; aviso("info", "Processando…"); desenhar();
+  try { await fn(); }
+  catch (e) { console.error(e); aviso("erro", msgErro(e)); }
+  finally { ocupado = false; desenhar(); }
+}
+async function atualizarPedido(p, campos, txt){
+  const up = JSON.parse(JSON.stringify(campos));
+  up.atualizadoEm = Date.now();
+  const k = FB.push(FB.ref(FB.db, `pedidos/${p.id}/log`)).key;
+  up["log/" + k] = {t: Date.now(), txt, por: (AUTH.currentUser && AUTH.currentUser.email) || ""};
+  await FB.update(FB.ref(FB.db, "pedidos/" + p.id), up);
+}
+async function comTentativas(fn){
+  let ult;
+  for (let t = 0; t < 3; t++){ try { return await fn(); } catch (e) { ult = e; await esperar(700); } }
+  throw ult;
+}
+const somaItens = itens => ({total: itens.reduce((n, i) => n + (Number(i.qtd) || 0) * (Number(i.preco) || 0), 0), qtdTotal: itens.reduce((n, i) => n + (Number(i.qtd) || 0), 0)});
+
+function confirmar(p){
+  executar(async () => {
+    await atualizarPedido(p, {status: "confirmado"}, "Pedido confirmado");
+    aviso("ok", `Pedido ${codPedido(p)} confirmado. O estoque continua reservado.`);
+  });
+}
+
+function concluir(p){
+  const itens = itensDe(p), res = itens.filter(i => i.res);
+  if (res.length && !ghToken){
+    $("painelGh").open = true; $("ghToken").focus();
+    aviso("erro", "Para concluir, informe o token do GitHub (a página baixa o estoque no produtos.json).");
+    return;
+  }
+  const txt = res.length ? `Concluir o pedido ${codPedido(p)}? O estoque de ${res.length} item(ns) será baixado no produtos.json.` : `Concluir o pedido ${codPedido(p)}?`;
+  if (!confirm(txt)) return;
+  executar(async () => {
+    let avisos = [];
+    if (res.length) avisos = await ghAjustarEstoque(res, -1, `Pedido ${codPedido(p) || p.id} concluído: baixa de estoque`);
+    try {
+      await comTentativas(() => atualizarPedido(p, {status: "concluido", baixado: res.length > 0}, res.length ? "Concluído (estoque baixado)" : "Concluído"));
+    } catch (e) {
+      throw new Error("ATENÇÃO: o estoque no produtos.json JÁ foi baixado, mas o pedido não foi marcado como concluído. Não repita a baixa: atualize a página e confira o pedido.");
+    }
+    try { if (res.length) await reservar(deltasDe(res, -1), null); } catch (e) { console.error(e); }
+    aviso("ok", `Pedido ${codPedido(p)} concluído.` + (avisos.length ? ` Atenção: não achei no produtos.json (baixe à mão): ${avisos.join(", ")}.` : res.length ? " Estoque baixado no produtos.json." : ""));
+  });
+}
+
+function cancelar(p){
+  const itens = itensDe(p), res = itens.filter(i => i.res);
+  const eraConcluido = p.status === "concluido";
+  if (eraConcluido && p.baixado && !ghToken){
+    $("painelGh").open = true; $("ghToken").focus();
+    aviso("erro", "Para cancelar um pedido concluído e devolver o estoque, informe o token do GitHub.");
+    return;
+  }
+  const txt = eraConcluido
+    ? `Cancelar o pedido ${codPedido(p)} que já foi concluído? O estoque será devolvido no produtos.json.`
+    : `Cancelar o pedido ${codPedido(p)}? Os aparelhos voltam para o estoque.`;
+  if (!confirm(txt)) return;
+  executar(async () => {
+    let avisos = [];
+    if (eraConcluido){
+      if (p.baixado && res.length) avisos = await ghAjustarEstoque(res, +1, `Pedido ${codPedido(p) || p.id} cancelado: estoque devolvido`);
+      await atualizarPedido(p, {status: "cancelado", baixado: false}, "Cancelado (estoque devolvido)");
+    } else {
+      await atualizarPedido(p, {status: "cancelado"}, "Cancelado");
+      if (res.length) await reservar(deltasDe(res, -1), null);
+    }
+    aviso("ok", `Pedido ${codPedido(p)} cancelado.` + (avisos.length ? ` Atenção: não achei no produtos.json: ${avisos.join(", ")}.` : ""));
+  });
+}
+
+function reabrir(p){
+  if (!confirm(`Reabrir o pedido ${codPedido(p)}? Os aparelhos serão reservados de novo (se ainda houver estoque).`)) return;
+  executar(async () => {
+    const itens = itensDe(p), res = itens.filter(i => i.res);
+    if (res.length){
+      const limites = await limitesDe(res);
+      const r = await reservar(deltasDe(res, +1), limites);
+      if (!r.committed){
+        const c = r.conflitos[0], it = res.find(i => i.chave === c.chave);
+        throw new Error(`Não dá para reabrir: ${nomeItem(it || {})} só tem ${c.resta} un. livres.`);
+      }
+    }
+    try { await atualizarPedido(p, {status: "novo"}, "Reaberto"); }
+    catch (e) { if (res.length) { try { await reservar(deltasDe(res, -1), null); } catch (e2) {} } throw e; }
+    aviso("ok", `Pedido ${codPedido(p)} reaberto e estoque reservado.`);
+  });
+}
+
+function excluir(p){
+  if (!confirm(`Excluir de vez o pedido ${codPedido(p)}? Isso não pode ser desfeito.`)) return;
+  executar(async () => {
+    await FB.remove(FB.ref(FB.db, "pedidos/" + p.id));
+    expandidos.delete(p.id);
+    aviso("ok", "Pedido excluído.");
+  });
+}
+
+// Altera a quantidade de um item do pedido (0 = remove o item). Reserva/devolve estoque na hora.
+function alterarQtd(p, idx, novaQtd){
+  const itens = itensDe(p).map(i => ({...i})), it = itens[idx];
+  if (!it) return;
+  const d = novaQtd - it.qtd;
+  if (!d) return;
+  if (novaQtd <= 0 && itens.length === 1){ cancelar(p); return; }
+  if (novaQtd <= 0 && !confirm(`Remover ${nomeItem(it)} do pedido ${codPedido(p)}?`)) return;
+  executar(async () => {
+    let reservado = false;
+    if (it.res){
+      let limites = null;
+      if (d > 0){ limites = await limitesDe([it]); }
+      const r = await reservar({[it.chave]: d}, limites);
+      if (!r.committed) throw new Error(`Só restam ${r.conflitos[0] ? r.conflitos[0].resta : 0} un. livres de ${nomeItem(it)}.`);
+      reservado = true;
+    }
+    const novos = itens.map((i, k) => k === idx ? {...i, qtd: novaQtd} : i).filter(i => i.qtd > 0);
+    try {
+      await atualizarPedido(p, {itens: novos, ...somaItens(novos)},
+        novaQtd <= 0 ? `Removido: ${nomeItem(it)}` : `Quantidade alterada: ${nomeItem(it)} (${it.qtd} → ${novaQtd})`);
+    } catch (e) {
+      if (reservado) { try { await reservar({[it.chave]: -d}, null); } catch (e2) {} }
+      throw e;
+    }
+    aviso("ok", novaQtd <= 0 ? "Item removido e estoque devolvido." : "Quantidade atualizada e estoque ajustado.");
+  });
+}
+
+function textoResumo(p){
+  const l = [`PEDIDO ${codPedido(p)} · ${p.cliente}`, `Status: ${ROTULO[p.status] || p.status}`, ""];
+  itensDe(p).forEach((i, k) => l.push(`${k + 1}. ${i.qtd}x ${nomeItem(i)}${i.bateria ? " · bateria " + i.bateria + "%" : ""} — ${brl(i.preco)} = ${brl(i.qtd * i.preco)}`));
+  l.push("", `Total: ${brl(p.total)}`);
+  return l.join("\n");
+}
+async function copiar(p){
+  try { await navigator.clipboard.writeText(textoResumo(p)); aviso("ok", "Resumo copiado."); }
+  catch (e) { aviso("erro", "Não consegui copiar. Selecione e copie manualmente."); }
+}
+
+/* ============ TELA ============ */
+function desenharResumo(){
+  const ab = pedidos.filter(aberto);
+  const un = ab.reduce((n, p) => n + itensDe(p).reduce((s, i) => s + (Number(i.qtd) || 0), 0), 0);
+  const valor = ab.reduce((n, p) => n + (Number(p.total) || 0), 0);
+  const hoje = new Date().toDateString();
+  const nHoje = pedidos.filter(p => p.criadoEm && new Date(p.criadoEm).toDateString() === hoje).length;
+  const box = $("resumo"); box.replaceChildren();
+  [[pedidos.filter(p => p.status === "novo").length, "Novos"], [un, "Aparelhos reservados"], [brl(valor), "Valor em aberto"], [nHoje, "Pedidos hoje"]]
+    .forEach(([v, r]) => { const s = el("div", "stat"); s.append(el("b", "", v), el("span", "", r)); box.append(s); });
+}
+
+function desenharAbas(){
+  const defs = [["abertos", "Abertos", pedidos.filter(aberto).length], ["concluidos", "Concluídos", pedidos.filter(p => p.status === "concluido").length],
+    ["cancelados", "Cancelados", pedidos.filter(p => p.status === "cancelado").length], ["todos", "Todos", pedidos.length]];
+  const nav = $("abas"); nav.replaceChildren();
+  defs.forEach(([k, nome, n]) => {
+    const b = el("button", "", `${nome} (${n})`); b.type = "button"; b.setAttribute("aria-pressed", k === aba);
+    b.onclick = () => { aba = k; desenhar(); };
+    nav.append(b);
+  });
+}
+
+function linhaItem(p, i, idx, editavel){
+  const r = el("div", "it");
+  const info = el("div", "it-info");
+  info.append(el("b", "", i.modelo + (i.detalhes ? " · " + i.detalhes : "")));
+  info.append(el("small", "", [i.condicao, i.bateria ? "bateria " + i.bateria + "%" : "", i.cor ? "cor " + i.cor : "", i.id ? "cód. #" + i.id : "", i.observacao ? "obs: " + i.observacao : ""].filter(Boolean).join(" · ")));
+  const dir = el("div", "it-dir");
+  if (editavel){
+    const q = el("div", "qtd");
+    const m = el("button", "", "−"); m.type = "button"; m.setAttribute("aria-label", "Diminuir quantidade"); m.disabled = ocupado || i.qtd <= 1;
+    m.onclick = () => alterarQtd(p, idx, i.qtd - 1);
+    const n = el("span", "", String(i.qtd));
+    const mais = el("button", "", "+"); mais.type = "button"; mais.setAttribute("aria-label", "Aumentar quantidade"); mais.disabled = ocupado;
+    mais.onclick = () => alterarQtd(p, idx, i.qtd + 1);
+    q.append(m, n, mais); dir.append(q);
+    const rm = el("button", "perigo mini", "Remover"); rm.type = "button"; rm.disabled = ocupado; rm.onclick = () => alterarQtd(p, idx, 0);
+    dir.append(rm);
+  } else dir.append(el("span", "q", i.qtd + "x"));
+  dir.append(el("span", "sub-it", brl((Number(i.preco) || 0) * (Number(i.qtd) || 0))));
+  r.append(info, dir);
+  return r;
+}
+
+function botao(txt, cls, fn){
+  const b = el("button", cls, txt); b.type = "button"; b.disabled = ocupado; b.onclick = fn; return b;
+}
+
+function cartao(p){
+  const card = el("article", "ped" + (p.status === "novo" ? " novo" : ""));
+  const itens = itensDe(p), aberto_ = expandidos.has(p.id), editavel = aberto(p);
+  const cab = el("div", "ped-cab");
+  cab.tabIndex = 0; cab.setAttribute("role", "button"); cab.setAttribute("aria-expanded", aberto_);
+  const esq = el("div");
+  const t = el("b", "", "Pedido " + (codPedido(p) || p.id.slice(-5)));
+  t.append(el("span", "chip " + p.status, ROTULO[p.status] || p.status));
+  esq.append(t);
+  const cli = el("div", "cli", p.cliente || "(sem nome)");
+  const meta = el("small", "", `${fmtData(p.criadoEm)} · ${itens.reduce((n, i) => n + (Number(i.qtd) || 0), 0)} aparelho(s)`);
+  esq.append(cli, meta);
+  cab.append(esq, el("div", "tot", brl(p.total)));
+  const alternar = () => { if (expandidos.has(p.id)) expandidos.delete(p.id); else expandidos.add(p.id); desenhar(); };
+  cab.onclick = alternar;
+  cab.onkeydown = e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); alternar(); } };
+  card.append(cab);
+
+  if (aberto_){
+    const corpo = el("div", "ped-corpo");
+    itens.forEach((i, idx) => corpo.append(linhaItem(p, i, idx, editavel)));
+    const ac = el("div", "acoes");
+    if (p.status === "novo") ac.append(botao("Confirmar", "pri", () => confirmar(p)));
+    if (editavel) ac.append(botao("Concluir (baixar estoque)", "ok", () => concluir(p)));
+    if (editavel) ac.append(botao("Cancelar pedido", "perigo", () => cancelar(p)));
+    if (p.status === "concluido") ac.append(botao("Cancelar e devolver estoque", "perigo", () => cancelar(p)));
+    if (p.status === "cancelado"){
+      ac.append(botao("Reabrir", "pri", () => reabrir(p)));
+      ac.append(botao("Excluir", "perigo", () => excluir(p)));
+    }
+    ac.append(botao("Copiar resumo", "sec", () => copiar(p)));
+    corpo.append(ac);
+    const log = Object.values(p.log || {}).sort((a, b) => (a.t || 0) - (b.t || 0));
+    if (log.length){
+      const ul = el("ul", "log");
+      log.forEach(l => ul.append(el("li", "", `${fmtData(l.t)} · ${l.txt}${l.por ? " · " + l.por : ""}`)));
+      corpo.append(ul);
+    }
+    card.append(corpo);
+  }
+  return card;
+}
+
+function desenhar(){
+  desenharResumo(); desenharAbas();
+  const termo = $("busca").value.trim().toLowerCase();
+  const lista = pedidos.filter(p =>
+    (aba === "todos" || (aba === "abertos" && aberto(p)) || (aba === "concluidos" && p.status === "concluido") || (aba === "cancelados" && p.status === "cancelado")) &&
+    (!termo || (String(p.cliente || "") + " " + codPedido(p) + " " + (p.codigo || "") + " " + itensDe(p).map(nomeItem).join(" ")).toLowerCase().includes(termo)));
+  const box = $("lista"); box.replaceChildren();
+  if (!lista.length){ box.append(el("div", "vazio", pedidos.length ? "Nenhum pedido neste filtro." : "Nenhum pedido ainda. Eles aparecem aqui assim que os clientes enviarem.")); return; }
+  const g = el("div"); g.style.display = "grid"; g.style.gap = "12px";
+  lista.forEach(p => g.append(cartao(p)));
+  box.append(g);
+}
+
+/* ============ SINCRONIA DAS RESERVAS ============ */
+function esperadas(){
+  const m = {};
+  pedidos.forEach(p => { if (aberto(p)) itensDe(p).forEach(i => { if (i.res) m[i.chave] = (m[i.chave] || 0) + (Number(i.qtd) || 0); }); });
+  return m;
+}
+function divergencias(){
+  const e = esperadas(), a = reservasAtuais, ks = new Set([...Object.keys(e), ...Object.keys(a)]), d = [];
+  ks.forEach(k => { const x = Number(e[k]) || 0, y = Number(a[k]) || 0; if (x !== y) d.push({chave: k, esperado: x, atual: y}); });
+  return d;
+}
+function agendarVerificacao(){ clearTimeout(tVerif); tVerif = setTimeout(verificar, 15000); }   // espera 15 s para não alarmar enquanto um cliente está finalizando
+function verificar(){
+  const d = divergencias(), b = $("banner");
+  b.hidden = !d.length; b.replaceChildren();
+  if (!d.length) return;
+  const nomes = {};
+  pedidos.forEach(p => itensDe(p).forEach(i => { nomes[i.chave] = nomeItem(i); }));
+  b.append(el("b", "", `Reservas fora de sincronia em ${d.length} item(ns)`));
+  b.append(el("span", "", d.slice(0, 6).map(x => `${nomes[x.chave] || x.chave}: reservado ${x.atual}, pedidos abertos ${x.esperado}`).join(" · ")));
+  const bt = el("button", "pri mini", "Recalcular reservas"); bt.type = "button"; bt.style.justifySelf = "start";
+  bt.onclick = () => {
+    if (!confirm("Recalcular as reservas a partir dos pedidos abertos? Faça isso quando não houver cliente finalizando um pedido.")) return;
+    executar(async () => { await FB.set(FB.ref(FB.db, "reservas"), esperadas()); aviso("ok", "Reservas recalculadas."); verificar(); });
+  };
+  b.append(bt);
+}
+
+/* ============ NOVOS PEDIDOS: som + título ============ */
+function beep(){
+  try {
+    const c = new (window.AudioContext || window.webkitAudioContext)(), o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination); o.frequency.value = 880; g.gain.setValueAtTime(.15, c.currentTime);
+    o.start(); o.stop(c.currentTime + .28);
+  } catch (e) {}
+}
+function detectarNovos(arr){
+  if (conhecidos === null){ conhecidos = new Set(arr.map(p => p.id)); return; }
+  const novos = arr.filter(p => !conhecidos.has(p.id));
+  novos.forEach(p => conhecidos.add(p.id));
+  const reais = novos.filter(p => p.status === "novo");
+  if (!reais.length) return;
+  beep();
+  aviso("info", reais.length === 1 ? `Novo pedido ${codPedido(reais[0])} de ${reais[0].cliente}` : `${reais.length} novos pedidos`);
+  if (document.hidden){ pendentes += reais.length; document.title = `(${pendentes}) Novo pedido! · Pedidos`; }
+}
+window.addEventListener("focus", () => { pendentes = 0; document.title = "Plugin Celulares · Pedidos do atacado"; });
+document.addEventListener("visibilitychange", () => { if (!document.hidden){ pendentes = 0; document.title = "Plugin Celulares · Pedidos do atacado"; } });
+
+/* ============ LOGIN E DADOS AO VIVO ============ */
+function parar(){ unsubs.forEach(u => { try { u(); } catch (e) {} }); unsubs = []; }
+function marcarVivo(on){
+  const v = $("vivo"); v.hidden = false; v.classList.toggle("off", !on); v.textContent = on ? "Ao vivo" : "Reconectando…";
+}
+function entrar(){
+  $("login").hidden = true; $("sair").hidden = false;
+  const pn = $("painel"); pn.hidden = false; pn.style.display = "grid";
+  conhecidos = null; pedidos = [];
+  unsubs.push(FB.onValue(FB.ref(FB.db, "pedidos"), s => {
+    const arr = [];
+    s.forEach(ch => { arr.push({id: ch.key, ...ch.val()}); });
+    arr.sort((a, b) => (b.criadoEm || 0) - (a.criadoEm || 0));
+    detectarNovos(arr); pedidos = arr; desenhar(); agendarVerificacao();
+  }, e => aviso("erro", msgErro(e))));
+  unsubs.push(FB.onValue(FB.ref(FB.db, "reservas"), s => { reservasAtuais = s.val() || {}; agendarVerificacao(); }, () => {}));
+  unsubs.push(FB.onValue(FB.ref(FB.db, ".info/connected"), s => marcarVivo(s.val() === true)));
+}
+function sair(){
+  parar(); pedidos = []; conhecidos = null;
+  $("painel").hidden = true; $("painel").style.display = "none"; $("sair").hidden = true; $("vivo").hidden = true;
+  $("login").hidden = false;
+}
+
+function iniciarToken(){
+  try {
+    const s = JSON.parse(localStorage.getItem(LS_GH) || "null");
+    if (s && s.token){ ghToken = s.token; $("ghToken").value = s.token; $("ghLembrar").checked = true; }
+  } catch (e) {}
+  $("ghArq").textContent = gh().path;
+  $("ghSalvar").onclick = () => {
+    ghToken = $("ghToken").value.trim();
+    try {
+      if ($("ghLembrar").checked && ghToken) localStorage.setItem(LS_GH, JSON.stringify({token: ghToken}));
+      else localStorage.removeItem(LS_GH);
+    } catch (e) {}
+    aviso("ok", ghToken ? "Token salvo." : "Token removido.");
+  };
+}
+
+(async function(){
+  $("busca").addEventListener("input", desenhar);
+  $("sair").onclick = () => FB && AUTH && FB.signOut(AUTH);
+  let cfg = null;
+  try { const r = await fetch("config.json?v=" + Date.now(), {cache: "no-store"}); cfg = await r.json(); } catch (e) {}
+  if (!cfg || !cfg.firebase || !cfg.firebase.apiKey || /COLE_AQUI/i.test(cfg.firebase.apiKey)){
+    aviso("erro", "Preencha o config.json com os dados do Firebase (passo a passo no LEIA-ME) e recarregue esta página.");
+    return;
+  }
+  CFG = cfg; iniciarToken();
+  try {
+    const base = `https://www.gstatic.com/firebasejs/${FB_VERSAO}/`;
+    const [app, dbm, auth] = await Promise.all([import(base + "firebase-app.js"), import(base + "firebase-database.js"), import(base + "firebase-auth.js")]);
+    const a = app.initializeApp(cfg.firebase);
+    FB = Object.assign({db: dbm.getDatabase(a), signOut: auth.signOut, signIn: auth.signInWithEmailAndPassword}, dbm);
+    AUTH = auth.getAuth(a);
+    auth.onAuthStateChanged(AUTH, u => { if (u) entrar(); else sair(); });
+  } catch (e) {
+    console.error(e); aviso("erro", "Não consegui carregar o Firebase. Verifique a internet e o config.json.");
+    return;
+  }
+  $("formLogin").addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const b = $("btnEntrar"); b.disabled = true;
+    try { await FB.signIn(AUTH, $("lEmail").value.trim(), $("lSenha").value); aviso("", ""); }
+    catch (e) {
+      const c = String(e.code || "");
+      aviso("erro", /invalid-credential|wrong-password|user-not-found|invalid-email/.test(c) ? "E-mail ou senha incorretos."
+        : /too-many-requests/.test(c) ? "Muitas tentativas. Aguarde um pouco e tente de novo."
+        : /unauthorized-domain/.test(c) ? "Este endereço não está autorizado no Firebase (Authentication → Settings → Authorized domains)."
+        : msgErro(e));
+    } finally { b.disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "firebase": {
+    "apiKey": "AIzaSyArSYOivtwg9qv6VzqrPUbjrJgQm9nLAkI",
+    "authDomain": "atacado-5c78f.firebaseapp.com",
+    "databaseURL": "https://atacado-5c78f-default-rtdb.firebaseio.com",
+    "projectId": "atacado-5c78f",
+    "appId": "1:1025265814626:web:a2c4f3b787167bb902d53b"
+  },
+  "github": {
+    "owner": "plugincelularesnovaserrana-sys",
+    "repo": "Atacado",
+    "branch": "main",
+    "path": "produtos.json"
+  }
+}

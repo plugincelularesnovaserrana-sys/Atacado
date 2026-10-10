@@ -1,0 +1,36 @@
+{
+  "rules": {
+    "reservas": {
+      ".read": true,
+      ".write": true,
+      "$chave": {
+        ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 9999"
+      }
+    },
+    "contador": {
+      ".read": true,
+      ".write": "auth != null || (!data.exists() && newData.val() == 1) || (data.exists() && newData.val() == data.val() + 1)",
+      ".validate": "newData.isNumber()"
+    },
+    "pedidos": {
+      ".read": "auth != null",
+      "$id": {
+        ".read": true,
+        ".write": "auth != null || (!data.exists() && newData.child('status').val() == 'novo')",
+        ".validate": "newData.hasChildren(['cliente', 'itens', 'total', 'status', 'criadoEm'])",
+        "cliente": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120"
+        },
+        "status": {
+          ".validate": "newData.isString() && newData.val().matches(/^(novo|confirmado|concluido|cancelado)$/)"
+        },
+        "total": {
+          ".validate": "newData.isNumber()"
+        },
+        "criadoEm": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    }
+  }
+}
