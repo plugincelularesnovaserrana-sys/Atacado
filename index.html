@@ -468,7 +468,7 @@ function marcarVivo(){
   v.hidden = !FB;
   if (!FB) return;
   v.classList.toggle("off", !conectado);
-  v.textContent = conectado ? "Estoque em tempo real" : "Reconectando…";
+  v.textContent = conectado ? " " : "Reconectando…";
 }
 
 function ligarReservas(){
