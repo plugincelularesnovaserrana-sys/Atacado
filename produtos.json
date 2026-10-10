@@ -20,7 +20,7 @@
       },
       "disponivel": true,
       "id": 1,
-      "qtd": 4
+      "qtd": 3
     },
     {
       "plataforma": "Apple",
@@ -42,7 +42,7 @@
       },
       "disponivel": true,
       "id": 2,
-      "qtd": 8
+      "qtd": 6
     },
     {
       "plataforma": "Apple",
@@ -110,7 +110,7 @@
       },
       "disponivel": true,
       "id": 5,
-      "qtd": 6
+      "qtd": 5
     },
     {
       "plataforma": "Apple",
